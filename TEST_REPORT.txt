@@ -1,0 +1,21 @@
+GadgetsFriendly Stage 1 — Correction Test Report
+
+Correction applied:
+- Removed the entire "Shop by Category" section from the homepage.
+- Removed associated category-grid CSS.
+- No benefit bar added.
+
+Static interaction checks:
+PASS — Home navigation target
+PASS — Shop dropdown and category destination links
+PASS — Shop iPhone / Explore Mac hero links
+PASS — Search handler and search drawer
+PASS — Cart handler and cart count/remove flow
+PASS — About open/close handler
+PASS — Repair drawer/form handler
+PASS — Mac / Apple / Accessories / Repair section anchors
+PASS — No "Shop by Category" markup remains
+PASS — No benefit bar text remains
+
+Stage scope:
+Stage 1 only. Admin, backend, database, Paystack, WhatsApp automation and email receipts remain intentionally unconnected.
