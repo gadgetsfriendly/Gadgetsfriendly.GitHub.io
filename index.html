@@ -76,6 +76,10 @@ footer{padding:44px 0 28px}.footgrid{display:grid;grid-template-columns:1.5fr re
 .drawer{position:fixed;inset:0;background:#0009;z-index:100;display:none}.drawer.open{display:block}.panel{position:absolute;right:0;top:0;height:100%;width:min(440px,100%);background:#0d1014;border-left:1px solid var(--line);padding:24px;overflow:auto}.close{float:right;width:38px;height:38px;border-radius:50%;border:1px solid #363b42;background:#11151a;color:#fff}.panel h2{font-family:Georgia,serif;font-size:30px;margin-top:60px}
 .form{display:grid;gap:12px}.form label{font-size:11px;color:#aeb2b8}.form input,.form textarea,.form select{width:100%;padding:12px;background:#090b0e;border:1px solid #30353b;color:#fff;border-radius:8px}.form textarea{min-height:110px;resize:vertical}
 .cartitem{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:15px 0}.empty{color:#777;text-align:center;padding:40px 0}
+/* Stage 3 product and operations UI */
+.cardimg img{width:100%;height:100%;object-fit:contain;display:block;padding:8px}.cardimg{background:radial-gradient(circle at 50% 45%,#20242a,#101216 68%)}
+.checkout-summary{border:1px solid var(--line);border-radius:10px;padding:13px;background:#090b0e;margin-bottom:15px}.checkout-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #1f2429;font-size:12px}.checkout-row:last-child{border-bottom:0}.checkout-total{font-size:14px;font-weight:900;padding-top:12px}.wa-note{font-size:10px;color:#858b93;line-height:1.5;margin-top:10px}
+
 @media(max-width:900px){.navlinks{display:none}.menu{display:block}.hero-grid{grid-template-columns:1fr;min-height:auto;padding:70px 0 30px}.hero-copy{order:1}.hero-art{order:2;height:420px}.hero{min-height:auto}h1{font-size:58px}.products{grid-template-columns:repeat(2,1fr)}.repair-grid{grid-template-columns:1fr}.repair-image{min-height:280px}.footgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.container{width:min(calc(100% - 24px),var(--max))}.nav{height:64px}.logo{font-size:16px}.navicons{margin-left:auto}.hero-grid{padding-top:48px}.hero-art{height:330px}.device-stack{transform:scale(.72)}h1{font-size:48px;letter-spacing:-2px}.hero p{font-size:13px}.products{grid-template-columns:repeat(2,1fr);gap:8px}.cardimg{height:145px}section{padding:44px 0}.section-title{font-size:28px}.footgrid{grid-template-columns:1fr}.panel{width:100%}}
 
@@ -212,7 +216,7 @@ body{min-width:320px}
   <div class="footgrid">
    <div class="footcol"><div class="logo">GADGETS<span>FRIENDLY</span></div><p style="color:#858a92;font-size:11px">Technology. Carefully chosen.</p><div class="socials"><a class="social wa" href="https://wa.me/2349071073992">WhatsApp</a><a class="social ig" href="https://www.instagram.com/gadgetsfriendly" target="_blank" rel="noopener">Instagram</a><a class="social tt" href="https://www.tiktok.com/@gadgetsfriendly" target="_blank" rel="noopener">TikTok</a><a class="social xx" href="https://x.com/gadgetsfriendly" target="_blank" rel="noopener">X</a></div></div>
    <div class="footcol"><h4>Shop</h4><a href="#apple">iPhone / iPad</a><a href="#mac">Mac / MacBook</a><a href="#apple">AirPods</a><a href="#accessories">Accessories</a></div>
-   <div class="footcol"><h4>Support</h4><a href="#repair">Repair Lab</a><a href="#about">About</a><a href="https://wa.me/2349071073992" target="_blank" rel="noopener">Contact / WhatsApp</a></div>
+   <div class="footcol"><h4>Support</h4><a href="#repair">Repair Lab</a><a href="#about">About</a><a href="https://wa.me/2349071073992" target="_blank" rel="noopener">Contact / WhatsApp</a><a href="admin.html">Admin</a></div>
    <div class="footcol"><h4>Contact</h4><a href="tel:+2347038798582">0703 879 8582</a><a href="tel:+2349071073992">0907 107 3992</a><a href="https://wa.me/2349071073992">WhatsApp</a></div>
   </div>
   <div class="copy">© 2026 GadgetsFriendly. All rights reserved.</div>
@@ -223,52 +227,70 @@ body{min-width:320px}
  <div class="panel" id="panel"></div>
 </div>
 
+<script src="storage.js"></script>
 <script>
-const data={
- new:[
-  ['iPhone Pro','256GB • New','₦1,450,000','phone'],['MacBook Air','M-series • 16GB','₦1,250,000','laptop'],['AirPods Pro','2nd Gen • ANC','₦420,000','pill'],['Apple Watch','Series • GPS','₦550,000','watch'],['iPad Air','Latest model','₦950,000','tablet']
- ],
- mac:[
-  ['MacBook Air','M-series • 16GB','₦1,250,000','laptop'],['MacBook Pro','Pro chip • 18GB','₦2,200,000','laptop'],['Mac mini','Desktop • M-series','₦950,000','laptop'],['MacBook Air','13-inch • New','₦1,150,000','laptop']
- ],
- apple:[
-  ['iPhone Pro Max','256GB • Titanium','₦1,450,000','phone'],['iPad Air','Latest model','₦950,000','tablet'],['AirPods Pro','2nd Gen • ANC','₦420,000','pill'],['Apple Watch','Series • GPS','₦550,000','watch'],['iPhone','128GB • New','₦1,050,000','phone']
- ],
- accessories:[
-  ['MagSafe Charger','Genuine Apple','₦95,000','pill'],['USB-C Cable','Fast charging','₦35,000','pill'],['Power Adapter','USB-C','₦65,000','pill'],['MagSafe Case','Premium case','₦75,000','pill'],['AirTag','Single pack','₦80,000','pill']
- ]
-};
+const ADMIN_KEY='gf_admin_products_v2';
+let data={new:[],mac:[],apple:[],accessories:[]};
+let productsById=new Map();
 let cart=[];
-function card(p){return `<article class="card"><div class="cardimg"><div class="product-shape ${p[3]}"></div></div><h3>${p[0]}</h3><div class="spec">${p[1]}</div><div class="price">${p[2]}</div><button class="add" type="button" aria-label="Add ${p[0]} to cart" onclick='addCart(${JSON.stringify(p)})'>Add to cart</button></article>`}
-function render(id,items){document.getElementById(id).innerHTML=items.map(card).join('')}
-render('newProducts',data.new);render('macProducts',data.mac);render('appleProducts',data.apple);render('accessoryProducts',data.accessories);
+let activeImageUrls=[];
+
+function typeClass(category,name){const n=(name||'').toLowerCase();if(category==='mac')return 'laptop';if(category==='accessories')return 'pill';if(n.includes('watch'))return 'watch';if(n.includes('airpods'))return 'pill';if(n.includes('ipad'))return 'tablet';return 'phone'}
+function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function formatPrice(n){return GFDB.formatNaira(n)}
+function revokeImages(){activeImageUrls.forEach(u=>URL.revokeObjectURL(u));activeImageUrls=[]}
+function adminToCard(p){return {id:p.id,name:p.name,spec:p.description||'Genuine Apple product',price:formatPrice(p.price),kind:typeClass(p.category,p.name),imageBlob:p.imageBlob||null,raw:p}}
+async function loadProducts(){
+  try{await GFDB.migrateProducts();const products=await GFDB.getAll('products');data={new:products.filter(p=>p.isNew).map(adminToCard),mac:products.filter(p=>p.category==='mac').map(adminToCard),apple:products.filter(p=>p.category==='apple').map(adminToCard),accessories:products.filter(p=>p.category==='accessories').map(adminToCard)};productsById=new Map(products.map(p=>[p.id,p]));await renderAllSections();}
+  catch(e){console.error(e);data={new:[],mac:[],apple:[],accessories:[]};await renderAllSections();}
+}
+async function card(p){
+  const name=p.name||p[0],spec=p.spec||p[1],price=p.price||p[2],raw=p.raw||p;
+  let image='';
+  if(p.imageBlob){const url=URL.createObjectURL(p.imageBlob);activeImageUrls.push(url);image=`<img src="${url}" alt="${escapeHtml(name)}">`}else image=`<div class="product-shape ${p.kind||p[3]||'pill'}"></div>`;
+  const id=raw.id?`onclick="addCartById('${String(raw.id).replace(/'/g,"\\'")}')"`:`onclick="addCartFallback(${JSON.stringify(raw).replace(/</g,'\\u003c')})"`;
+  return `<article class="card"><div class="cardimg">${image}</div><h3>${escapeHtml(name)}</h3><div class="spec">${escapeHtml(spec)}</div><div class="price">${escapeHtml(price)}</div><button class="add" type="button" aria-label="Add ${escapeHtml(name)} to cart" ${id}>Add to cart</button></article>`;
+}
+async function render(id,items){const el=document.getElementById(id);if(!items.length){el.innerHTML='<div class="empty">No products added yet.</div>';return}el.innerHTML=(await Promise.all(items.map(card))).join('')}
+async function renderAllSections(){revokeImages();await Promise.all([render('newProducts',data.new),render('macProducts',data.mac),render('appleProducts',data.apple),render('accessoryProducts',data.accessories)]);updateCart()}
+loadProducts();
 
 function toggleShop(e){if(e){e.preventDefault();e.stopPropagation()}document.getElementById('shopDrop').classList.toggle('open')}
 function closeMenus(){document.getElementById('shopDrop').classList.remove('open')}
 document.addEventListener('click',e=>{if(!e.target.closest('.drop'))closeMenus()})
 function toggleAbout(e){if(e)e.preventDefault();const el=document.getElementById('about');el.classList.toggle('open');if(el.classList.contains('open'))el.scrollIntoView({behavior:'smooth',block:'start'})}
-function toggleMobileMenu(e){if(e)e.stopPropagation();const m=document.getElementById('mobileNav');m.classList.toggle('open');m.setAttribute('aria-hidden',m.classList.contains('open')?'false':'true')}
-function closeMobileMenu(){const m=document.getElementById('mobileNav');m.classList.remove('open');m.setAttribute('aria-hidden','true')}
+function toggleMobileMenu(e){if(e)e.stopPropagation();document.getElementById('mobileNav').classList.toggle('open');document.getElementById('mobileNav').setAttribute('aria-hidden',document.getElementById('mobileNav').classList.contains('open')?'false':'true')}
+function closeMobileMenu(){document.getElementById('mobileNav').classList.remove('open');document.getElementById('mobileNav').setAttribute('aria-hidden','true')}
 function toggleMobileShop(e){if(e)e.stopPropagation();document.getElementById('mobileShop').classList.toggle('open')}
-function openRepair(e){if(e)e.preventDefault();closeMenus();closeMobileMenu();openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Book a Repair</h2><p style="color:#999">Tell us what needs attention. Your request will be sent to the repair system.</p><form class="form" onsubmit="submitRepair(event)"><label>Full name<input required name="name"></label><label>Phone number<input required name="phone" type="tel"></label><label>Device<select name="device"><option>iPhone</option><option>iPad</option><option>Mac / MacBook</option><option>Apple Watch</option><option>AirPods</option><option>Other</option></select></label><label>Model<input required name="model"></label><label>Problem<textarea required name="problem"></textarea></label><label>Preferred date<input required name="date" type="date"></label><button class="btn primary" type="submit">Submit Repair Request</button></form>`)}
-function submitRepair(e){e.preventDefault();alert('Repair request captured. Backend and WhatsApp notification will be connected in the backend stage.');closeDrawer()}
-function openSearch(e){if(e)e.preventDefault();openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Search</h2><form class="form" onsubmit="searchProducts(event)"><input id="searchInput" placeholder="Search products..." autocomplete="off" oninput="liveSearch()"><button class="btn primary" type="submit">Search</button></form><div id="searchResults" style="margin-top:20px"></div>`);setTimeout(()=>document.getElementById('searchInput')?.focus(),30)}
-function liveSearch(){const q=document.getElementById('searchInput').value.trim().toLowerCase();const all=[...data.new,...data.mac,...data.apple,...data.accessories];const r=q?all.filter(x=>x.join(' ').toLowerCase().includes(q)):all;document.getElementById('searchResults').innerHTML=r.length?r.map(card).join(''):'<div class="empty">No products found.</div>'}
+
+function openRepair(e){if(e)e.preventDefault();closeMenus();closeMobileMenu();openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Book a Repair</h2><p style="color:#999">Tell us what needs attention. Your name and phone are saved with the repair request so our team can keep you informed.</p><form class="form" onsubmit="submitRepair(event)"><label>Full name<input required name="name" autocomplete="name"></label><label>Phone number<input required name="phone" type="tel" autocomplete="tel" placeholder="0803 123 4567"></label><label>Device<select name="device"><option>iPhone</option><option>iPad</option><option>Mac / MacBook</option><option>Apple Watch</option><option>AirPods</option><option>Other</option></select></label><label>Model<input required name="model" placeholder="e.g. iPhone 15 Pro"></label><label>Problem<textarea required name="problem" placeholder="Describe the problem..."></textarea></label><label>Preferred date<input required name="date" type="date"></label><button class="btn primary" type="submit">Submit Repair Request</button><div class="wa-note">After saving the request, WhatsApp will open with the repair details ready to send to GadgetsFriendly.</div></form>`)}
+async function submitRepair(e){e.preventDefault();const form=e.target;const fd=new FormData(form);const popup=window.open('about:blank','_blank');const r={id:GFDB.makeId('repair'),name:String(fd.get('name')).trim(),phone:String(fd.get('phone')).trim(),device:String(fd.get('device')),model:String(fd.get('model')).trim(),problem:String(fd.get('problem')).trim(),date:String(fd.get('date')),status:'new',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};try{await GFDB.put('repairs',r);const msg=`New GadgetsFriendly Repair Request\nName: ${r.name}\nPhone: ${r.phone}\nDevice: ${r.device}\nModel: ${r.model}\nProblem: ${r.problem}\nPreferred date: ${r.date}`;if(popup)popup.location.href=GFDB.waUrl(msg);else GFDB.notifyWhatsApp(msg);closeDrawer();alert('Repair request saved. WhatsApp is ready with the repair notification.')}catch(err){if(popup)popup.close();alert('Could not save the repair request. Please try again.')}}
+
+function allProducts(){return [...data.new,...data.mac,...data.apple,...data.accessories]}
+function openSearch(e){if(e)e.preventDefault();openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Search</h2><form class="form" onsubmit="searchProducts(event)"><input id="searchInput" placeholder="Search products..." autocomplete="off" oninput="liveSearch()"><button class="btn primary" type="submit">Search</button></form><div id="searchResults" style="margin-top:20px"></div>`);setTimeout(()=>document.getElementById('searchInput')?.focus(),30);liveSearch()}
+async function liveSearch(){const input=document.getElementById('searchInput'),out=document.getElementById('searchResults');if(!input||!out)return;const q=input.value.trim().toLowerCase();const all=allProducts();const r=q?all.filter(x=>(x.name||x[0]||'').toLowerCase().includes(q)||JSON.stringify(x.raw||x).toLowerCase().includes(q)):all;out.innerHTML=r.length?(await Promise.all(r.map(card))).join(''):'<div class="empty">No products found.</div>'}
 function searchProducts(e){e.preventDefault();liveSearch()}
-function addCart(p){cart.push(p);updateCart();alert(p[0]+' added to cart.')}
-function updateCart(){document.getElementById('cartCount').textContent=cart.length;document.getElementById('cartCount2').textContent=cart.length;document.getElementById('mobileCartCount').textContent=cart.length}
-function openCart(e){if(e)e.preventDefault();const body=cart.length?cart.map((p,i)=>`<div class="cartitem"><span>${p[0]}<br><small style="color:#888">${p[2]}</small></span><button class="btn" onclick="removeCart(${i})">Remove</button></div>`).join(''):'<div class="empty">Your cart is empty.</div>';openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Your Cart</h2>${body}${cart.length?'<button class="btn primary" style="width:100%;margin-top:20px" onclick="alert(\'Checkout will be connected to Paystack in the backend stage.\')">Checkout</button>':''}`)}
+
+function addCartById(id){const p=productsById.get(id);if(!p)return;cart.push(p);updateCart();alert(p.name+' added to cart.')}
+function addCartFallback(p){cart.push(p);updateCart();alert((p.name||p[0])+' added to cart.')}
+function updateCart(){const count=cart.length;['cartCount','cartCount2','mobileCartCount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=count})}
+function cartItemName(p){return p.name||p[0]}
+function cartItemPrice(p){return Number(p.price??String(p[2]||'').replace(/[^0-9.]/g,''))||0}
+function cartTotal(){return cart.reduce((sum,p)=>sum+cartItemPrice(p),0)}
 function removeCart(i){cart.splice(i,1);updateCart();openCart()}
+function openCart(e){if(e)e.preventDefault();const body=cart.length?cart.map((p,i)=>`<div class="cartitem"><span>${escapeHtml(cartItemName(p))}<br><small style="color:#888">${formatPrice(cartItemPrice(p))}</small></span><button class="btn" onclick="removeCart(${i})">Remove</button></div>`).join(''):'<div class="empty">Your cart is empty.</div>';openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Your Cart</h2>${body}${cart.length?`<div class="checkout-total" style="margin-top:18px">Total: ${formatPrice(cartTotal())}</div><button class="btn primary" style="width:100%;margin-top:18px" onclick="openCheckout()">Continue to Checkout</button>`:''}`)}
+function openCheckout(){const items=cart.map(p=>`<div class="checkout-row"><span>${escapeHtml(cartItemName(p))}</span><b>${formatPrice(cartItemPrice(p))}</b></div>`).join('');openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Checkout</h2><div class="checkout-summary">${items}<div class="checkout-row checkout-total"><span>Total</span><b>${formatPrice(cartTotal())}</b></div></div><form class="form" onsubmit="submitPurchase(event)"><label>Full name<input required name="name" autocomplete="name"></label><label>Phone number<input required name="phone" type="tel" autocomplete="tel" placeholder="0803 123 4567"></label><label>Order note (optional)<textarea name="note" placeholder="Colour, storage, delivery note..."></textarea></label><button class="btn primary" type="submit">Send Purchase Request</button><div class="wa-note">Your request is saved for the admin and WhatsApp opens with the purchase notification ready to send.</div></form>`)}
+async function submitPurchase(e){e.preventDefault();if(!cart.length)return;const form=e.target,fd=new FormData(form),popup=window.open('about:blank','_blank');const p={id:GFDB.makeId('purchase'),name:String(fd.get('name')).trim(),phone:String(fd.get('phone')).trim(),note:String(fd.get('note')||'').trim(),items:cart.map(x=>({id:x.id||null,name:cartItemName(x),price:cartItemPrice(x)})),total:cartTotal(),status:'new',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};try{await GFDB.put('purchases',p);const lines=p.items.map(x=>`${x.name} — ${formatPrice(x.price)}`).join('\n');const msg=`New GadgetsFriendly Purchase Request\nCustomer: ${p.name}\nPhone: ${p.phone}\nItems:\n${lines}\nTotal: ${formatPrice(p.total)}${p.note?'\nNote: '+p.note:''}`;if(popup)popup.location.href=GFDB.waUrl(msg);else GFDB.notifyWhatsApp(msg);cart=[];updateCart();closeDrawer();alert('Purchase request saved. WhatsApp is ready with the order notification.')}catch(err){if(popup)popup.close();alert('Could not save the purchase request. Please try again.')}}
+
 function openDrawer(content){document.getElementById('panel').innerHTML=content;document.getElementById('drawer').classList.add('open');document.body.style.overflow='hidden'}
 function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.body.style.overflow=''}
 document.getElementById('drawer').addEventListener('click',e=>{if(e.target.id==='drawer')closeDrawer()})
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeMobileMenu();closeMenus()}})
 let dragging=false,startX=0,startY=0,tx=0,ty=0;
-const art=document.getElementById('heroArt'), stack=document.getElementById('deviceStack');
+const art=document.getElementById('heroArt'),stack=document.getElementById('deviceStack');
 art.addEventListener('pointerdown',e=>{dragging=true;art.classList.add('dragging');startX=e.clientX-tx;startY=e.clientY-ty;art.setPointerCapture(e.pointerId)});
 art.addEventListener('pointermove',e=>{if(!dragging)return;tx=e.clientX-startX;ty=e.clientY-startY;tx=Math.max(-80,Math.min(80,tx));ty=Math.max(-45,Math.min(45,ty));stack.style.transform=`translate3d(${tx}px,${ty}px,0)`});
 art.addEventListener('pointerup',()=>{dragging=false;art.classList.remove('dragging')});
-art.addEventListener('pointercancel',()=>{dragging=false;art.classList.remove('dragging')});
 </script>
 </body>
 </html>
