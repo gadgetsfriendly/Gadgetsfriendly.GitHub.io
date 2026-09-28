@@ -1,21 +1,29 @@
-GadgetsFriendly Stage 1 — Correction Test Report
+GadgetsFriendly Final Fix Verification — 28 Sep 2026
 
-Correction applied:
-- Removed the entire "Shop by Category" section from the homepage.
-- Removed associated category-grid CSS.
-- No benefit bar added.
+1. Repair navigation
+- Repair icon replaced with a clearer wrench/repair icon.
+- Repair icon now scrolls directly to the Repair Lab section.
+- Existing Book a Repair button remains functional.
 
-Static interaction checks:
-PASS — Home navigation target
-PASS — Shop dropdown and category destination links
-PASS — Shop iPhone / Explore Mac hero links
-PASS — Search handler and search drawer
-PASS — Cart handler and cart count/remove flow
-PASS — About open/close handler
-PASS — Repair drawer/form handler
-PASS — Mac / Apple / Accessories / Repair section anchors
-PASS — No "Shop by Category" markup remains
-PASS — No benefit bar text remains
+2. Admin actions
+- Product Delete uses the IndexedDB product store and refreshes the inventory immediately.
+- Repair Delete uses the IndexedDB repair store and refreshes the queue immediately.
+- Purchase Delete uses the IndexedDB purchase store and refreshes the queue immediately.
+- Clear Completed Jobs removes all records whose status is completed.
+- Clear Completed Purchases removes all records whose status is completed.
+- Clear Product Form resets the complete product form and image preview.
 
-Stage scope:
-Stage 1 only. Admin, backend, database, Paystack, WhatsApp automation and email receipts remain intentionally unconnected.
+3. Product images
+- Product uploads remain proportional and are never cropped or stretched.
+- Original image type is retained for normal-size uploads; only very large images are downscaled.
+- Front-end product cards use contain-style proportional rendering with no forced stretching.
+- Admin preview and inventory thumbnails also preserve image proportions.
+
+4. Database reliability
+- IndexedDB schema version increased to v2 so older v1 databases are upgraded and missing stores are created.
+- Products, repairs and purchases continue to use the same GadgetsFriendlyDB database.
+
+5. Verification performed
+- JavaScript syntax checks passed for all scripts in index.html and admin.html.
+- Static functional checks confirmed all requested repair/delete/clear/image functions and handlers are present.
+- Package contents and ZIP integrity were checked before delivery.

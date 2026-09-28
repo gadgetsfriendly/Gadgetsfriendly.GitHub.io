@@ -17,7 +17,7 @@ a{color:inherit;text-decoration:none} button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .container{width:min(calc(100% - 40px),var(--max));margin:auto}
 header{position:sticky;top:0;z-index:50;background:rgba(7,8,9,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
-.nav{height:76px;display:flex;align-items:center;gap:28px}
+.nav{height:76px;display:flex;align-items:center;gap:18px;position:relative}
 .logo{font-size:18px;font-weight:900;letter-spacing:-.6px;margin-right:auto}
 .logo span{color:var(--red)}
 .navlinks{display:flex;align-items:center;gap:24px;font-size:13px;color:#ddd}
@@ -25,9 +25,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(7,8,9,.88);backdrop-filt
 .drop{position:relative}.dropbtn{background:none;border:0;color:#ddd;padding:10px 0}
 .dropmenu{display:none;position:absolute;top:42px;left:-15px;width:240px;background:#101318;border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 20px 60px #0009}
 .drop.open .dropmenu{display:block}.dropmenu a{display:block;padding:12px;border-radius:9px;color:#ddd}.dropmenu a:hover{background:#191d22;color:#fff}
-.navicons{display:flex;gap:8px}.iconbtn{width:40px;height:40px;border:1px solid #343940;background:#0e1115;color:#fff;border-radius:50%;display:grid;place-items:center}
+.navicons{display:flex;gap:8px;margin-left:auto}.iconbtn{width:40px;height:40px;position:relative;border:1px solid #343940;background:#0e1115;color:#fff;border-radius:50%;display:grid;place-items:center}
 .cartcount{position:absolute;margin:-22px 0 0 23px;background:var(--red);font-size:9px;border-radius:99px;padding:2px 5px}
-.menu{display:none}
+.iconbtn svg{width:20px;height:20px;display:block}.repair-icon{color:#fff;border-color:#59616b;box-shadow:0 0 0 1px #ffffff08,0 0 18px #ffffff10}.repair-icon:hover{border-color:#ff2638;color:#ff6672}.menu{display:grid}
 
 .hero{position:relative;min-height:610px;overflow:hidden;border-bottom:1px solid var(--line)}
 .hero:before{content:"";position:absolute;inset:0;background:
@@ -77,21 +77,19 @@ footer{padding:44px 0 28px}.footgrid{display:grid;grid-template-columns:1.5fr re
 .form{display:grid;gap:12px}.form label{font-size:11px;color:#aeb2b8}.form input,.form textarea,.form select{width:100%;padding:12px;background:#090b0e;border:1px solid #30353b;color:#fff;border-radius:8px}.form textarea{min-height:110px;resize:vertical}
 .cartitem{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:15px 0}.empty{color:#777;text-align:center;padding:40px 0}
 /* Stage 3 product and operations UI */
-.cardimg img{width:100%;height:100%;object-fit:contain;display:block;padding:8px}.cardimg{background:radial-gradient(circle at 50% 45%,#20242a,#101216 68%)}
+.cardimg img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;display:block;padding:0;margin:auto}.cardimg{background:radial-gradient(circle at 50% 45%,#20242a,#101216 68%);display:flex;align-items:center;justify-content:center}
 .checkout-summary{border:1px solid var(--line);border-radius:10px;padding:13px;background:#090b0e;margin-bottom:15px}.checkout-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #1f2429;font-size:12px}.checkout-row:last-child{border-bottom:0}.checkout-total{font-size:14px;font-weight:900;padding-top:12px}.wa-note{font-size:10px;color:#858b93;line-height:1.5;margin-top:10px}
 
-@media(max-width:900px){.navlinks{display:none}.menu{display:block}.hero-grid{grid-template-columns:1fr;min-height:auto;padding:70px 0 30px}.hero-copy{order:1}.hero-art{order:2;height:420px}.hero{min-height:auto}h1{font-size:58px}.products{grid-template-columns:repeat(2,1fr)}.repair-grid{grid-template-columns:1fr}.repair-image{min-height:280px}.footgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;min-height:auto;padding:70px 0 30px}.hero-copy{order:1}.hero-art{order:2;height:420px}.hero{min-height:auto}h1{font-size:58px}.products{grid-template-columns:repeat(2,1fr)}.repair-grid{grid-template-columns:1fr}.repair-image{min-height:280px}.footgrid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.container{width:min(calc(100% - 24px),var(--max))}.nav{height:64px}.logo{font-size:16px}.navicons{margin-left:auto}.hero-grid{padding-top:48px}.hero-art{height:330px}.device-stack{transform:scale(.72)}h1{font-size:48px;letter-spacing:-2px}.hero p{font-size:13px}.products{grid-template-columns:repeat(2,1fr);gap:8px}.cardimg{height:145px}section{padding:44px 0}.section-title{font-size:28px}.footgrid{grid-template-columns:1fr}.panel{width:100%}}
 
-/* Stage 1 responsive hardening */
+/* Navigation: one clean icon bar on every screen size */
 html{scroll-padding-top:78px}
 body{min-width:320px}
-.mobile-nav{display:none}
-@media(max-width:900px){
-  .nav{position:relative}.mobile-nav{display:none;position:absolute;left:12px;right:12px;top:70px;background:rgba(13,16,20,.98);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 20px 60px #000b;z-index:80}
-  .mobile-nav.open{display:block}.mobile-nav>a,.mobile-nav>button{display:block;width:100%;text-align:left;padding:13px 14px;border:0;background:transparent;color:#eee;border-radius:9px;font-weight:700;font-size:13px}.mobile-nav>a:hover,.mobile-nav>button:hover{background:#191d22}.mobile-nav>button{display:flex;justify-content:space-between}.mobile-shop{display:none;padding-left:10px}.mobile-shop.open{display:block}.mobile-shop a{display:block;padding:11px 12px;color:#bfc3ca;font-size:12px}
-}
-@media(min-width:901px){.mobile-nav{display:none!important}}
+.mobile-nav{display:none;position:absolute;left:0;right:0;top:70px;background:rgba(13,16,20,.99);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 20px 60px #000b;z-index:80}
+.mobile-nav.open{display:block}
+.mobile-nav>a{display:block;width:100%;text-align:left;padding:14px;border:0;background:transparent;color:#eee;border-radius:9px;font-weight:700;font-size:13px}
+.mobile-nav>a:hover{background:#191d22}
 @media(max-width:560px){
   .hero-grid{gap:0}.hero-copy{width:100%}.hero-art{overflow:visible}.device-stack{transform:scale(.64);transform-origin:center center}.device-stack:after{left:95px;top:45px;width:350px;height:350px}.device-stack .phone{right:55px;left:auto}.device-stack .laptop{right:10px;top:135px;width:430px}.hero-art{height:350px}
   .actions .btn{flex:1;min-width:0;text-align:center;padding:12px 14px}.section-head{gap:14px}.view{white-space:nowrap}
@@ -108,39 +106,27 @@ body{min-width:320px}
 <body>
 <header>
   <div class="container nav">
-    <a class="logo" href="#home" onclick="closeMenus()">GADGETS<span>FRIENDLY</span></a>
-    <nav class="navlinks">
-      <a href="#home" onclick="closeMenus()">Home</a>
-      <div class="drop" id="shopDrop">
-        <button class="dropbtn" onclick="toggleShop(event)">Shop ▾</button>
-        <div class="dropmenu">
-          <a href="#accessories" onclick="closeMenus()">Accessories</a>
-          <a href="#mac" onclick="closeMenus()">Mac / MacBook / Laptops</a>
-          <a href="#apple" onclick="closeMenus()">iPhone / Apple Watch / AirPods / iPad</a>
-          <a href="#repair" onclick="openRepair(event)">Repairs</a>
-        </div>
-      </div>
-      <a href="#about" onclick="toggleAbout(event)">About</a>
-      <a href="#" onclick="openSearch(event)">Search</a>
-      <a href="#" onclick="openCart(event)">Cart <span class="cartcount" id="cartCount">0</span></a>
-    </nav>
-    <div class="navicons">
-      <button class="iconbtn menu" aria-label="Open menu" onclick="toggleMobileMenu(event)">☰</button>
-      <button class="iconbtn" aria-label="Search" onclick="openSearch(event)">⌕</button>
-      <button class="iconbtn" aria-label="Cart" onclick="openCart(event)">🛒<span class="cartcount" id="cartCount2">0</span></button>
+    <a class="logo" href="#home" onclick="closeMenus();closeMobileMenu()">GADGETS<span>FRIENDLY</span></a>
+    <div class="navicons" aria-label="Main navigation">
+      <button class="iconbtn" aria-label="Open navigation menu" title="Menu" onclick="toggleMobileMenu(event)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="iconbtn repair-icon" aria-label="Repairs" title="Repairs" onclick="goToRepair(event)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.8 5.2a4.1 4.1 0 0 0-5.1 5.1L4.3 15.7a2.2 2.2 0 0 0 3.1 3.1l5.4-5.4a4.1 4.1 0 0 0 5.1-5.1l-2.2 2.2-2.5-.8-.8-2.5 2.4-2.0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="17.3" r="1.05" fill="currentColor"/></svg>
+      </button>
+      <button class="iconbtn" aria-label="Search" title="Search" onclick="openSearch(event)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="iconbtn" aria-label="Cart" title="Cart" onclick="openCart(event)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h2l1.4 10.2a2 2 0 0 0 2 1.8h7.8a2 2 0 0 0 1.9-1.5L21 8H7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.2" fill="currentColor"/><circle cx="18" cy="20" r="1.2" fill="currentColor"/></svg>
+        <span class="cartcount" id="cartCount">0</span>
+      </button>
     </div>
     <div class="mobile-nav" id="mobileNav" aria-hidden="true">
       <a href="#home" onclick="closeMobileMenu()">Home</a>
-      <button type="button" onclick="toggleMobileShop(event)">Shop <span>⌄</span></button>
-      <div class="mobile-shop" id="mobileShop">
-        <a href="#accessories" onclick="closeMobileMenu()">Accessories</a>
-        <a href="#mac" onclick="closeMobileMenu()">Mac / MacBook / Laptops</a>
-        <a href="#apple" onclick="closeMobileMenu()">iPhone / Apple Watch / AirPods / iPad</a>
-        <a href="#repair" onclick="openRepair();closeMobileMenu()">Repairs</a>
-      </div>
-      <a href="#about" onclick="toggleAbout(event);closeMobileMenu()">About</a>
-      <a href="#" onclick="openSearch(event);closeMobileMenu()">Search</a>
-      <a href="#" onclick="openCart(event);closeMobileMenu()">Cart <span id="mobileCartCount">0</span></a>
+      <a href="#mac" onclick="closeMobileMenu()">Mac / MacBook / Laptop</a>
+      <a href="#apple" onclick="closeMobileMenu()">iPhone / Apple Watch / AirPods / iPad</a>
+      <a href="#accessories" onclick="closeMobileMenu()">Accessories</a>
     </div>
   </div>
 </header>
@@ -227,7 +213,88 @@ body{min-width:320px}
  <div class="panel" id="panel"></div>
 </div>
 
-<script src="storage.js"></script>
+<script>
+/* GadgetsFriendly Stage 3 local database layer.
+   Uses IndexedDB so product images and customer records are not limited by localStorage's small quota.
+   This is still browser-local storage; Stage 4/5 can replace this layer with a real server database. */
+(function(){
+  const DB_NAME='GadgetsFriendlyDB';
+  const DB_VERSION=2;
+  const ADMIN_PRODUCTS_KEY='gf_admin_products_v2';
+  const ADMIN_WA='2349071073992';
+
+  function openDB(){
+    return new Promise((resolve,reject)=>{
+      const req=indexedDB.open(DB_NAME,DB_VERSION);
+      req.onupgradeneeded=()=>{
+        const db=req.result;
+        if(!db.objectStoreNames.contains('products')) db.createObjectStore('products',{keyPath:'id'});
+        if(!db.objectStoreNames.contains('repairs')) db.createObjectStore('repairs',{keyPath:'id'});
+        if(!db.objectStoreNames.contains('purchases')) db.createObjectStore('purchases',{keyPath:'id'});
+        if(!db.objectStoreNames.contains('meta')) db.createObjectStore('meta',{keyPath:'key'});
+      };
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error||new Error('Could not open local database.'));
+    });
+  }
+  function tx(store,mode='readonly'){
+    return openDB().then(db=>({db,transaction:db.transaction(store,mode),store:db.transaction(store,mode).objectStore(store)}));
+  }
+  async function getAll(store){
+    const db=await openDB();
+    return new Promise((resolve,reject)=>{const t=db.transaction(store,'readonly');const r=t.objectStore(store).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error||new Error('Database read failed.'));});
+  }
+  async function get(store,id){
+    const db=await openDB();
+    return new Promise((resolve,reject)=>{const t=db.transaction(store,'readonly');const r=t.objectStore(store).get(id);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error||new Error('Database read failed.'));});
+  }
+  async function put(store,value){
+    const db=await openDB();
+    return new Promise((resolve,reject)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).put(value);t.oncomplete=()=>resolve(value);t.onerror=()=>reject(t.error||new Error('Database save failed.'));});
+  }
+  async function remove(store,id){
+    const db=await openDB();
+    return new Promise((resolve,reject)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).delete(id);t.oncomplete=resolve;t.onerror=()=>reject(t.error||new Error('Database delete failed.'));});
+  }
+  async function clear(store){
+    const db=await openDB();
+    return new Promise((resolve,reject)=>{const t=db.transaction(store,'readwrite');t.objectStore(store).clear();t.oncomplete=resolve;t.onerror=()=>reject(t.error||new Error('Database clear failed.'));});
+  }
+  async function metaGet(key){const v=await get('meta',key);return v?v.value:null;}
+  async function metaSet(key,value){return put('meta',{key,value});}
+
+  async function dataUrlToBlob(src){
+    if(!src) return null;
+    try{return await fetch(src).then(r=>r.blob());}catch(e){return null;}
+  }
+
+  async function migrateProducts(){
+    const migrated=await metaGet('productsMigratedV1');
+    if(migrated) return;
+    let old=[];
+    try{old=JSON.parse(localStorage.getItem(ADMIN_PRODUCTS_KEY)||'[]');}catch(e){old=[];}
+    const existing=await getAll('products');
+    if(!existing.length && Array.isArray(old) && old.length){
+      for(const p of old){
+        const copy={...p,imageBlob:null};
+        if(p.image) copy.imageBlob=await dataUrlToBlob(p.image);
+        delete copy.image;
+        await put('products',copy);
+      }
+    }
+    try{localStorage.removeItem(ADMIN_PRODUCTS_KEY);}catch(e){}
+    await metaSet('productsMigratedV1',true);
+  }
+
+  function waUrl(message){return 'https://wa.me/'+ADMIN_WA+'?text='+encodeURIComponent(message);}
+  function notifyWhatsApp(message){window.open(waUrl(message),'_blank','noopener');}
+  function formatNaira(n){return '₦'+Number(n||0).toLocaleString('en-NG');}
+  function makeId(prefix){return prefix+'_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);}
+
+  window.GFDB={openDB,getAll,get,put,remove,clear,migrateProducts,waUrl,notifyWhatsApp,formatNaira,makeId,ADMIN_WA};
+})();
+
+</script>
 <script>
 const ADMIN_KEY='gf_admin_products_v2';
 let data={new:[],mac:[],apple:[],accessories:[]};
@@ -261,8 +328,8 @@ document.addEventListener('click',e=>{if(!e.target.closest('.drop'))closeMenus()
 function toggleAbout(e){if(e)e.preventDefault();const el=document.getElementById('about');el.classList.toggle('open');if(el.classList.contains('open'))el.scrollIntoView({behavior:'smooth',block:'start'})}
 function toggleMobileMenu(e){if(e)e.stopPropagation();document.getElementById('mobileNav').classList.toggle('open');document.getElementById('mobileNav').setAttribute('aria-hidden',document.getElementById('mobileNav').classList.contains('open')?'false':'true')}
 function closeMobileMenu(){document.getElementById('mobileNav').classList.remove('open');document.getElementById('mobileNav').setAttribute('aria-hidden','true')}
-function toggleMobileShop(e){if(e)e.stopPropagation();document.getElementById('mobileShop').classList.toggle('open')}
 
+function goToRepair(e){if(e)e.preventDefault();closeMenus();closeMobileMenu();const section=document.getElementById('repair');if(section){section.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>document.querySelector('#repair .btn.primary')?.focus({preventScroll:true}),450)}}
 function openRepair(e){if(e)e.preventDefault();closeMenus();closeMobileMenu();openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Book a Repair</h2><p style="color:#999">Tell us what needs attention. Your name and phone are saved with the repair request so our team can keep you informed.</p><form class="form" onsubmit="submitRepair(event)"><label>Full name<input required name="name" autocomplete="name"></label><label>Phone number<input required name="phone" type="tel" autocomplete="tel" placeholder="0803 123 4567"></label><label>Device<select name="device"><option>iPhone</option><option>iPad</option><option>Mac / MacBook</option><option>Apple Watch</option><option>AirPods</option><option>Other</option></select></label><label>Model<input required name="model" placeholder="e.g. iPhone 15 Pro"></label><label>Problem<textarea required name="problem" placeholder="Describe the problem..."></textarea></label><label>Preferred date<input required name="date" type="date"></label><button class="btn primary" type="submit">Submit Repair Request</button><div class="wa-note">After saving the request, WhatsApp will open with the repair details ready to send to GadgetsFriendly.</div></form>`)}
 async function submitRepair(e){e.preventDefault();const form=e.target;const fd=new FormData(form);const popup=window.open('about:blank','_blank');const r={id:GFDB.makeId('repair'),name:String(fd.get('name')).trim(),phone:String(fd.get('phone')).trim(),device:String(fd.get('device')),model:String(fd.get('model')).trim(),problem:String(fd.get('problem')).trim(),date:String(fd.get('date')),status:'new',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};try{await GFDB.put('repairs',r);const msg=`New GadgetsFriendly Repair Request\nName: ${r.name}\nPhone: ${r.phone}\nDevice: ${r.device}\nModel: ${r.model}\nProblem: ${r.problem}\nPreferred date: ${r.date}`;if(popup)popup.location.href=GFDB.waUrl(msg);else GFDB.notifyWhatsApp(msg);closeDrawer();alert('Repair request saved. WhatsApp is ready with the repair notification.')}catch(err){if(popup)popup.close();alert('Could not save the repair request. Please try again.')}}
 
@@ -273,7 +340,7 @@ function searchProducts(e){e.preventDefault();liveSearch()}
 
 function addCartById(id){const p=productsById.get(id);if(!p)return;cart.push(p);updateCart();alert(p.name+' added to cart.')}
 function addCartFallback(p){cart.push(p);updateCart();alert((p.name||p[0])+' added to cart.')}
-function updateCart(){const count=cart.length;['cartCount','cartCount2','mobileCartCount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=count})}
+function updateCart(){const count=cart.length;['cartCount'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=count})}
 function cartItemName(p){return p.name||p[0]}
 function cartItemPrice(p){return Number(p.price??String(p[2]||'').replace(/[^0-9.]/g,''))||0}
 function cartTotal(){return cart.reduce((sum,p)=>sum+cartItemPrice(p),0)}
