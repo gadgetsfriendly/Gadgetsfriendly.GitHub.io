@@ -1,0 +1,137 @@
+GADGETSFRIENDLY — FINAL RECEIPT FIX FOR index.html
+===================================================
+
+DO NOT change the Paystack initialization or verification functions.
+
+1) In submitPurchase(), immediately BEFORE:
+   window.location.href=authorizationUrl;
+
+ADD:
+
+try{
+  localStorage.setItem('gf_pending_receipt_v1',JSON.stringify({
+    purchaseId,
+    name,
+    phone,
+    email,
+    note,
+    items:purchase.items,
+    total,
+    createdAt:new Date().toISOString(),
+    reference
+  }));
+}catch(_){}
+
+2) Add these functions anywhere before handlePaymentReturn():
+
+function getPendingCustomerReceipt(reference,purchaseId){
+  let r=null;
+  try{r=JSON.parse(localStorage.getItem('gf_pending_receipt_v1')||'null')}catch(_){}
+  if(!r || r.purchaseId!==purchaseId) return null;
+  r.reference=reference||r.reference||'';
+  r.paymentStatus='PAID';
+  try{localStorage.setItem('gf_pending_receipt_v1',JSON.stringify(r))}catch(_){}
+  return r;
+}
+
+function customerReceiptDocument(r){
+  const rows=(r.items||[]).map(x=>`<tr>
+    <td>${escapeHtml(x.name||'')}</td>
+    <td>${formatPrice(x.price)}</td>
+  </tr>`).join('');
+
+  return `<!doctype html><html><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GadgetsFriendly Receipt</title>
+  <style>
+    body{font:14px Arial,sans-serif;max-width:760px;margin:auto;padding:30px;color:#111}
+    h1{margin:0 0 4px}h1 span{color:#e21f32}
+    hr{border:0;border-top:1px solid #ddd;margin:22px 0}
+    .meta{line-height:1.8}table{width:100%;border-collapse:collapse}
+    th,td{padding:11px 8px;border-bottom:1px solid #ddd;text-align:left}
+    th{font-size:12px;color:#666}.total{text-align:right;font-size:20px;font-weight:800;margin-top:20px}
+    .print{padding:12px 18px;margin-top:20px;background:#111;color:#fff;border:0;border-radius:8px}
+    @media print{.print{display:none}body{padding:0}}
+  </style></head><body>
+  <h1>GADGETS<span>FRIENDLY</span></h1>
+  <div>Technology. Carefully Chosen.</div><hr>
+  <div class="meta">
+    <b>Receipt / Order:</b> ${escapeHtml(r.purchaseId)}<br>
+    <b>Date:</b> ${escapeHtml(new Date(r.createdAt||Date.now()).toLocaleString('en-NG'))}<br>
+    <b>Customer:</b> ${escapeHtml(r.name||'')}<br>
+    <b>Phone:</b> ${escapeHtml(r.phone||'')}<br>
+    <b>Email:</b> ${escapeHtml(r.email||'')}<br>
+    <b>Payment:</b> PAID<br>
+    <b>Paystack reference:</b> ${escapeHtml(r.reference||'—')}
+  </div><hr>
+  <table><thead><tr><th>Product</th><th>Price</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <div class="total">Total: ${formatPrice(r.total)}</div>
+  ${r.note?`<p><b>Order note:</b> ${escapeHtml(r.note)}</p>`:''}
+  <p>Thank you for choosing GadgetsFriendly.</p>
+  <button class="print" onclick="window.print()">Print / Save as PDF</button>
+  </body></html>`;
+}
+
+function printCustomerReceipt(){
+  const r=window.__gfCustomerReceipt;
+  if(!r)return alert('Receipt information is not available.');
+  const w=window.open('about:blank','_blank');
+  if(!w)return alert('Please allow pop-ups to open the receipt.');
+  w.document.open();
+  w.document.write(customerReceiptDocument(r));
+  w.document.close();
+}
+
+3) Replace the current successful-payment block:
+
+if(paid){
+  cart=[];updateCart();
+  openDrawer(`...`);
+  history.replaceState({},document.title,location.pathname)
+}
+
+WITH:
+
+if(paid){
+  const receipt=getPendingCustomerReceipt(reference,purchaseId);
+  cart=[];updateCart();
+
+  if(receipt){
+    window.__gfCustomerReceipt=receipt;
+    openDrawer(`
+      <button class="close" onclick="closeDrawer()">×</button>
+      <h2>Payment successful ✓</h2>
+      <p style="color:#bbb;line-height:1.7">
+        Thank you for your purchase. Your payment has been verified and your receipt is ready.
+      </p>
+      <p style="color:#888;font-size:12px">
+        Reference: ${escapeHtml(reference)}
+      </p>
+      <button class="btn primary" style="width:100%;margin-top:12px"
+        onclick="printCustomerReceipt()">View / Print Receipt</button>
+      <button class="btn" style="width:100%;margin-top:10px"
+        onclick="closeDrawer()">Continue Shopping</button>
+    `);
+  }else{
+    openDrawer(`
+      <button class="close" onclick="closeDrawer()">×</button>
+      <h2>Payment successful ✓</h2>
+      <p style="color:#bbb;line-height:1.7">
+        Your payment has been verified and your order has been recorded.
+      </p>
+      <p style="color:#888;font-size:12px">
+        Reference: ${escapeHtml(reference)}
+      </p>
+      <button class="btn primary" onclick="closeDrawer()">Continue Shopping</button>
+    `);
+  }
+
+  history.replaceState({},document.title,location.pathname);
+}
+
+IMPORTANT:
+- This gives the customer an immediate receipt they can view/print/save as PDF.
+- The Admin receipt remains the authoritative receipt containing the private Serial/IMEI.
+- Automatic email delivery is NOT added by this patch because the current Supabase schema intentionally prevents public customers from reading purchases, and there is no confirmed email provider/receipt Edge Function in the current files. Do not expose product_private through the public client.
