@@ -3,320 +3,420 @@
 
   function initRegistryPopup() {
     const registry = document.getElementById('registry');
+    const registryInput = document.getElementById('registryQ');
+    const registryResults = document.getElementById('registryResults');
 
-    if (!registry || document.getElementById('gfRegistrySearchModal')) return;
+    if (!registry || !registryInput || !registryResults) return;
 
-    const style = document.createElement('style');
+    const searchCard = registryInput.closest('.card');
+    const resultsCard = registryResults.closest('.card');
 
-    style.textContent = `
-      #registry .gf-registry-search-card {
-        display: none !important;
-      }
+    /* Hide the original search card */
+    if (searchCard) {
+      searchCard.style.display = 'none';
+    }
 
-      .gf-registry-launch {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin: 0 0 18px;
-        padding: 16px 18px;
-        border: 1px solid #394049;
-        border-radius: 14px;
-        background: linear-gradient(145deg,#151a20,#0d1014);
-        color: #fff;
-        font-weight: 700;
-        font-size: 17px;
-        cursor: pointer;
-      }
+    /* Popup + launcher styles */
+    if (!document.getElementById('gf-registry-popup-style')) {
+      const style = document.createElement('style');
+      style.id = 'gf-registry-popup-style';
 
-      .gf-registry-launch:hover {
-        border-color: #ff2638;
-      }
-
-      .gf-registry-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 99990;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-        background: rgba(0,0,0,.78);
-        backdrop-filter: blur(8px);
-      }
-
-      .gf-registry-modal.open {
-        display: flex;
-      }
-
-      .gf-registry-panel {
-        width: min(680px,100%);
-        max-height: 90vh;
-        overflow: auto;
-        background: linear-gradient(145deg,#11151a,#090c0f);
-        border: 1px solid #343b44;
-        border-radius: 20px;
-        padding: 22px;
-        box-shadow: 0 25px 90px rgba(0,0,0,.55);
-      }
-
-      .gf-registry-head {
-        display: flex;
-        justify-content: space-between;
-        gap: 14px;
-        margin-bottom: 18px;
-      }
-
-      .gf-registry-head h2 {
-        margin: 0 0 7px;
-        font-size: 25px;
-      }
-
-      .gf-registry-head p {
-        margin: 0;
-        color: #9da3ab;
-        line-height: 1.5;
-      }
-
-      .gf-registry-x {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        border: 1px solid #394049;
-        background: #171c22;
-        color: #fff;
-        font-size: 25px;
-        cursor: pointer;
-      }
-
-      .gf-registry-input {
-        width: 100%;
-        padding: 15px 16px;
-        border-radius: 12px;
-        border: 1px solid #394049;
-        background: #07090b;
-        color: #fff;
-        outline: none;
-        font-size: 16px;
-      }
-
-      .gf-registry-input:focus {
-        border-color: #ff2638;
-        box-shadow: 0 0 0 3px rgba(255,38,56,.12);
-      }
-
-      .gf-registry-actions {
-        display: flex;
-        gap: 10px;
-        margin-top: 12px;
-      }
-
-      .gf-registry-actions button {
-        flex: 1;
-        padding: 13px 15px;
-        border-radius: 11px;
-        border: 1px solid #394049;
-        background: #11151a;
-        color: #fff;
-        cursor: pointer;
-      }
-
-      .gf-registry-actions .primary {
-        background: #ff2638;
-        border-color: #ff2638;
-      }
-
-      .gf-registry-note {
-        margin-top: 14px;
-        color: #9da3ab;
-        font-size: 13px;
-        text-align: center;
-      }
-
-      @media(max-width:600px) {
-        .gf-registry-modal {
-          padding: 8px;
-          align-items: flex-end;
+      style.textContent = `
+        .gf-registry-launch {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          margin: 18px 0 20px;
+          padding: 18px 20px;
+          border: 1px solid #30363e;
+          border-radius: 15px;
+          background: linear-gradient(145deg,#171c22,#101419);
+          color: #fff;
+          font-size: 18px;
+          font-weight: 800;
+          cursor: pointer;
+          box-sizing: border-box;
         }
 
-        .gf-registry-panel {
-          max-height: 92vh;
-          border-radius: 20px 20px 0 0;
+        .gf-registry-results-hidden {
+          display: none !important;
+        }
+
+        .gf-registry-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 100001;
+          display: none;
+          align-items: center;
+          justify-content: center;
           padding: 18px;
+          background: rgba(0,0,0,.78);
+          box-sizing: border-box;
         }
 
-        .gf-registry-head h2 {
-          font-size: 22px;
+        .gf-registry-overlay.open {
+          display: flex;
+        }
+
+        .gf-registry-modal {
+          width: min(620px,100%);
+          max-height: calc(100vh - 36px);
+          overflow: auto;
+          padding: 22px;
+          border: 1px solid #30363e;
+          border-radius: 18px;
+          background: linear-gradient(145deg,#151a20,#0b0e12);
+          box-shadow: 0 24px 80px rgba(0,0,0,.55);
+          box-sizing: border-box;
+        }
+
+        .gf-registry-modal-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 8px;
+        }
+
+        .gf-registry-modal h2 {
+          margin: 0;
+          font-size: 24px;
+        }
+
+        .gf-registry-close {
+          width: 42px;
+          height: 42px;
+          border: 1px solid #30363e;
+          border-radius: 50%;
+          background: #171c22;
+          color: #fff;
+          font-size: 25px;
+          line-height: 1;
+          cursor: pointer;
+        }
+
+        .gf-registry-modal p {
+          margin: 0 0 16px;
+          color: #a8afb8;
+          line-height: 1.5;
+        }
+
+        .gf-registry-modal input {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 16px;
+          border: 1px solid #30363e;
+          border-radius: 12px;
+          outline: none;
+          background: #080a0d;
+          color: #fff;
+          font-size: 16px;
+        }
+
+        .gf-registry-modal input:focus {
+          border-color: #ff2438;
+          box-shadow: 0 0 0 2px rgba(255,36,56,.12);
         }
 
         .gf-registry-actions {
-          flex-direction: column;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin-top: 14px;
         }
-      }
-    `;
 
-    document.head.appendChild(style);
+        .gf-registry-actions button {
+          min-height: 48px;
+          border: 1px solid #30363e;
+          border-radius: 11px;
+          background: #151a20;
+          color: #fff;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+        }
 
-    const oldCard = registry.querySelector('.card');
+        .gf-registry-actions .primary {
+          border-color: #ff2438;
+          background: #ff2438;
+        }
 
-    if (oldCard) {
-      oldCard.classList.add('gf-registry-search-card');
+        @media (max-width: 520px) {
+          .gf-registry-modal {
+            padding: 18px;
+          }
+
+          .gf-registry-modal h2 {
+            font-size: 21px;
+          }
+
+          .gf-registry-actions {
+            grid-template-columns: 1fr;
+          }
+        }
+      `;
+
+      document.head.appendChild(style);
     }
 
-    const launch = document.createElement('button');
+    /* Show/hide Registry Records */
+    function showResults(show) {
+      if (!resultsCard) return;
 
-    launch.type = 'button';
-    launch.className = 'gf-registry-launch';
-    launch.innerHTML = '⌕ <span>Search Device & Receipt Registry</span>';
-
-    const heading = registry.querySelector('h1');
-
-    if (heading) {
-      heading.insertAdjacentElement('afterend', launch);
+      resultsCard.classList.toggle(
+        'gf-registry-results-hidden',
+        !show
+      );
     }
 
-    const modal = document.createElement('div');
-
-    modal.id = 'gfRegistrySearchModal';
-    modal.className = 'gf-registry-modal';
-
-    modal.innerHTML = `
-      <div class="gf-registry-panel">
-
-        <div class="gf-registry-head">
-
-          <div>
-            <h2>Search Registry</h2>
-
-            <p>
-              Find a customer, order, Paystack reference,
-              product, Serial number or IMEI.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            class="gf-registry-x"
-            aria-label="Close search">
-            ×
-          </button>
-
-        </div>
-
-        <input
-          id="gfRegistryInput"
-          class="gf-registry-input"
-          autocomplete="off"
-          placeholder="Customer, order, reference, serial or IMEI…">
-
-        <div class="gf-registry-actions">
-
-          <button
-            type="button"
-            class="primary"
-            id="gfRegistrySearchBtn">
-            Search
-          </button>
-
-          <button
-            type="button"
-            id="gfRegistryClearBtn">
-            Clear
-          </button>
-
-        </div>
-
-        <div class="gf-registry-note">
-          Search results remain on the Registry page.
-        </div>
-
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    const input = modal.querySelector('#gfRegistryInput');
-
-    function closeModal() {
-      modal.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function performSearch() {
-      const target = document.getElementById('registryQ');
-
-      if (!target) return;
-
-      target.value = input.value.trim();
+    /* Search using the existing Registry system */
+    function runSearch(query) {
+      registryInput.value = query;
 
       if (typeof window.renderRegistry === 'function') {
         window.renderRegistry();
       }
 
-      closeModal();
+      showResults(!!query);
     }
 
-    launch.addEventListener('click', function () {
-      const target = document.getElementById('registryQ');
+    /* Clear search and hide records */
+    function clearSearch() {
+      registryInput.value = '';
 
-      input.value = target ? target.value : '';
+      if (typeof window.renderRegistry === 'function') {
+        window.renderRegistry();
+      }
 
-      modal.classList.add('open');
-      document.body.style.overflow = 'hidden';
+      showResults(false);
+    }
+
+    /* Hide records when page first opens */
+    showResults(false);
+
+    /* Search launcher */
+    let launcher = document.getElementById(
+      'gfRegistrySearchLaunch'
+    );
+
+    if (!launcher) {
+      launcher = document.createElement('button');
+
+      launcher.type = 'button';
+      launcher.id = 'gfRegistrySearchLaunch';
+      launcher.className = 'gf-registry-launch';
+
+      launcher.innerHTML =
+        '<span aria-hidden="true">⌕</span>' +
+        '<span>Search Device &amp; Receipt Registry</span>';
+
+      const grid = registry.querySelector('.registry-grid');
+
+      if (grid) {
+        grid.parentNode.insertBefore(launcher, grid);
+      } else {
+        registry.appendChild(launcher);
+      }
+    }
+
+    /* Create popup */
+    let overlay = document.getElementById(
+      'gfRegistrySearchOverlay'
+    );
+
+    if (!overlay) {
+      overlay = document.createElement('div');
+
+      overlay.id = 'gfRegistrySearchOverlay';
+      overlay.className = 'gf-registry-overlay';
+
+      overlay.innerHTML = `
+        <div class="gf-registry-modal"
+             role="dialog"
+             aria-modal="true">
+
+          <div class="gf-registry-modal-head">
+            <h2>Search Registry</h2>
+
+            <button
+              type="button"
+              class="gf-registry-close"
+              id="gfRegistryClose"
+              aria-label="Close">
+              ×
+            </button>
+          </div>
+
+          <p>
+            Search customer, email, phone, order ID,
+            Paystack reference, product, Serial number or IMEI.
+          </p>
+
+          <input
+            id="gfRegistryPopupInput"
+            type="search"
+            autocomplete="off"
+            placeholder="Search customer, order, reference, serial or IMEI…">
+
+          <div class="gf-registry-actions">
+
+            <button
+              type="button"
+              class="primary"
+              id="gfRegistryDoSearch">
+              Search
+            </button>
+
+            <button
+              type="button"
+              id="gfRegistryClear">
+              Clear
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+    }
+
+    const popupInput =
+      document.getElementById('gfRegistryPopupInput');
+
+    const closeButton =
+      document.getElementById('gfRegistryClose');
+
+    const searchButton =
+      document.getElementById('gfRegistryDoSearch');
+
+    const clearButton =
+      document.getElementById('gfRegistryClear');
+
+    function openPopup() {
+      overlay.classList.add('open');
+
+      popupInput.value =
+        registryInput.value || '';
 
       setTimeout(function () {
-        input.focus();
+        popupInput.focus();
       }, 50);
-    });
+    }
 
-    modal.querySelector('.gf-registry-x')
-      .addEventListener('click', closeModal);
+    function closePopup() {
+      overlay.classList.remove('open');
+    }
 
-    modal.querySelector('#gfRegistrySearchBtn')
-      .addEventListener('click', performSearch);
+    launcher.onclick = openPopup;
 
-    modal.querySelector('#gfRegistryClearBtn')
-      .addEventListener('click', function () {
+    closeButton.onclick = closePopup;
 
-        input.value = '';
+    searchButton.onclick = function () {
+      const query =
+        popupInput.value.trim();
 
-        const target = document.getElementById('registryQ');
+      runSearch(query);
 
-        if (target) {
-          target.value = '';
+      closePopup();
+
+      if (query) {
+        setTimeout(function () {
+          const results =
+            document.getElementById(
+              'registryResults'
+            );
+
+          if (results) {
+            results.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }, 80);
+      }
+    };
+
+    clearButton.onclick = function () {
+      popupInput.value = '';
+
+      clearSearch();
+
+      closePopup();
+    };
+
+    /* Press Enter to search */
+    popupInput.addEventListener(
+      'keydown',
+      function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+
+          searchButton.click();
         }
+      }
+    );
 
-        if (typeof window.renderRegistry === 'function') {
-          window.renderRegistry();
+    /* Tap outside popup to close */
+    overlay.addEventListener(
+      'click',
+      function (event) {
+        if (event.target === overlay) {
+          closePopup();
         }
-
-        input.focus();
-      });
-
-    input.addEventListener('keydown', function (event) {
-
-      if (event.key === 'Enter') {
-        performSearch();
       }
+    );
 
-      if (event.key === 'Escape') {
-        closeModal();
+    /* Escape closes popup */
+    document.addEventListener(
+      'keydown',
+      function (event) {
+        if (
+          event.key === 'Escape' &&
+          overlay.classList.contains('open')
+        ) {
+          closePopup();
+        }
       }
+    );
 
-    });
+    /* Keep existing Clear Registry function working */
+    if (!window.__gfRegistryClearWrapped) {
 
-    modal.addEventListener('click', function (event) {
+      const originalClear =
+        window.clearRegistrySearch;
 
-      if (event.target === modal) {
-        closeModal();
-      }
+      window.clearRegistrySearch =
+        function () {
 
-    });
+          if (
+            typeof originalClear ===
+            'function'
+          ) {
+            originalClear();
+          } else {
+            clearSearch();
+          }
+
+          showResults(false);
+        };
+
+      window.__gfRegistryClearWrapped =
+        true;
+    }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRegistryPopup);
+  /* Start */
+  if (
+    document.readyState ===
+    'loading'
+  ) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      initRegistryPopup
+    );
   } else {
     initRegistryPopup();
   }
