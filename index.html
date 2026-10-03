@@ -344,5 +344,6 @@ async function handlePaymentReturn(){
 let dragging=false,startX=0,startY=0,tx=0,ty=0;const art=document.getElementById('heroArt'),stack=document.getElementById('deviceStack');if(art&&stack){art.addEventListener('pointerdown',e=>{dragging=true;startX=e.clientX-tx;startY=e.clientY-ty;art.setPointerCapture?.(e.pointerId)});art.addEventListener('pointermove',e=>{if(!dragging)return;tx=Math.max(-80,Math.min(80,e.clientX-startX));ty=Math.max(-45,Math.min(45,e.clientY-startY));stack.style.transform=`translate3d(${tx}px,${ty}px,0)`});art.addEventListener('pointerup',()=>dragging=false);art.addEventListener('pointercancel',()=>dragging=false)}
 handlePaymentReturn();
 </script>
+<script src="registry-popup.js"></script>
 </body>
 </html>
