@@ -1,0 +1,205 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GadgetsFriendly — Admin</title>
+<style>
+:root{--bg:#070809;--p:#0d1014;--l:#272c32;--t:#f5f5f5;--m:#9da3ab;--r:#ff2638;--g:#37d67a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:14px Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.top{position:sticky;top:0;z-index:5;padding:16px 22px;background:#090a0ceb;border-bottom:1px solid var(--l);display:flex;justify-content:space-between;gap:10px}.logo{font-weight:900}.logo span{color:var(--r)}.btn{background:#11151a;color:#fff;border:1px solid #394049;border-radius:9px;padding:10px 14px}.primary{background:var(--r);border-color:var(--r)}.danger{color:#ff9ba4}.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 65px)}.side{padding:18px;border-right:1px solid var(--l)}.nav{width:100%;padding:12px;text-align:left;background:transparent;color:#bbb;border:1px solid transparent;border-radius:9px;margin:4px 0}.nav.active,.nav:hover{background:#14181d;color:#fff;border-color:#30363e}.main{max-width:1400px;width:100%;padding:28px;margin:auto}.card{background:linear-gradient(145deg,#11151a,#0c0f12);border:1px solid var(--l);border-radius:15px;padding:20px;margin-bottom:18px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{padding:18px;background:#0d1014;border:1px solid var(--l);border-radius:12px}.num{font-size:28px;font-weight:800;margin-top:7px}.muted{color:var(--m)}.form{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:grid;gap:6px}.full{grid-column:1/-1}.field input,.field select,.field textarea{width:100%;background:#080a0d;color:#fff;border:1px solid #30363e;border-radius:8px;padding:11px}.field textarea{min-height:100px}.actions{display:flex;gap:8px;margin-top:14px}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th,.table td{padding:11px;border-bottom:1px solid #252a30;text-align:left;vertical-align:top}.table th{color:#8f969f;font-size:11px}.thumb{max-width:70px;max-height:70px;object-fit:contain}.badge{display:inline-block;padding:4px 7px;border-radius:99px;background:#22272d;font-size:10px}.paid{background:#10291b;color:#8af0b5}.new{background:#381318;color:#ff9aa4}.toast{position:fixed;right:15px;bottom:15px;background:#171c22;border:1px solid #414851;padding:12px;border-radius:9px;display:none}.toast.show{display:block}@media(max-width:850px){.layout{display:block}.side{display:flex;overflow:auto;border-right:0;border-bottom:1px solid var(--l);position:sticky;top:64px;background:#090b0e;z-index:4}.nav{min-width:120px;text-align:center}.grid4{grid-template-columns:1fr 1fr}.form{grid-template-columns:1fr}.full{grid-column:auto}.main{padding:14px}}
+
+/* ===== HIDDEN DEVICE & RECEIPT REGISTRY ===== */
+.registry-launch{color:#fff!important}.registry-launch:hover{border-color:var(--red)!important;color:#fff!important}
+.registry-section .registry-search{display:flex;gap:10px}.registry-section .registry-search input{flex:1;background:#080a0d;color:#fff;border:1px solid #30363e;border-radius:9px;padding:12px}.registry-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}.registry-table{overflow:auto}.registry-table table{width:100%;border-collapse:collapse;min-width:850px}.registry-table th,.registry-table td{padding:11px;border-bottom:1px solid #252a30;text-align:left;vertical-align:top}.registry-table th{color:#8f969f;font-size:11px;text-transform:uppercase}.registry-chip{display:inline-block;background:#171c22;border:1px solid #343b44;border-radius:7px;padding:4px 7px;margin:2px;font:11px ui-monospace,monospace}.registry-overlay{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.80);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:18px}.registry-overlay.open{display:flex}.registry-modal{width:min(620px,100%);background:#0d1014;border:1px solid #343b44;border-radius:18px;box-shadow:0 30px 90px #000b;padding:22px}.registry-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.registry-modal h2{margin:0;font-size:23px}.registry-modal p{color:#9da3ac;line-height:1.55;font-size:12px}.registry-modal input{width:100%;box-sizing:border-box;padding:14px 15px;border-radius:10px;border:1px solid #343b44;background:#080a0d;color:#fff;outline:none}.registry-modal input:focus{border-color:var(--red);box-shadow:0 0 0 3px #ff26381a}.registry-actions{display:flex;gap:10px;margin-top:12px}.registry-actions button{flex:1}.registry-close{width:38px;height:38px;border-radius:50%;border:1px solid #343b44;background:#151a20;color:#fff;font-size:25px;line-height:1;cursor:pointer}.registry-launcher{width:100%;margin:14px 0;padding:14px 16px;border:1px solid #343b44;border-radius:12px;background:#0e1115;color:#fff;font-weight:800;cursor:pointer;text-align:left}.registry-launcher:hover{border-color:var(--red);box-shadow:0 0 18px #ff26381f}.registry-launcher span:first-child{font-size:20px;color:var(--red)}
+@media(max-width:850px){.registry-stats{grid-template-columns:1fr 1fr}.registry-search{flex-direction:column}}
+@media(max-width:600px){.registry-overlay{padding:10px}.registry-modal{padding:18px}.registry-actions{flex-direction:column}}
+</style>
+<style>
+.gf-receipt-overlay{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.82);overflow:auto;padding:18px}
+.gf-receipt-shell{width:min(860px,100%);margin:0 auto 30px}
+.gf-receipt-toolbar{display:flex;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:2;padding:8px 0 12px}
+.gf-receipt-toolbar button,.gf-receipt-error button{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}
+.gf-receipt-close{background:#252a31;color:#fff}
+.gf-receipt-print{background:#e21f32;color:#fff}
+.gf-receipt-paper{background:#fff;color:#111;max-width:760px;margin:0 auto;padding:30px;border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.35);font:14px Arial,sans-serif}
+.gf-receipt-paper h1{margin:0 0 4px;font-size:30px;color:#111}
+.gf-receipt-paper h1 span{color:#e21f32}
+.gf-receipt-sub{color:#666;margin:0 0 16px}
+.gf-receipt-store{line-height:1.6;color:#555}
+.gf-receipt-paper hr{border:0;border-top:1px solid #ddd;margin:20px 0}
+.gf-receipt-meta{line-height:1.8}
+.gf-receipt-table{width:100%;border-collapse:collapse;margin-top:20px}
+.gf-receipt-table th,.gf-receipt-table td{padding:11px 8px;border-bottom:1px solid #ddd;text-align:left}
+.gf-receipt-table th{font-size:12px;color:#666}
+.gf-receipt-total{text-align:right;font-size:20px;font-weight:800;margin-top:20px}
+.gf-paid{display:inline-block;padding:4px 8px;border-radius:6px;background:#e8f8ee;color:#08752e;font-weight:700}
+.gf-receipt-thanks{margin-top:28px;color:#555}
+.gf-receipt-loading,.gf-receipt-error{background:#fff;color:#111;border-radius:14px;padding:40px;text-align:center;max-width:760px;margin:80px auto}
+.gf-receipt-error button{background:#111;color:#fff;margin-top:10px}
+@media(max-width:600px){.gf-receipt-overlay{padding:10px}.gf-receipt-paper{padding:20px;border-radius:10px}.gf-receipt-paper h1{font-size:25px}.gf-receipt-table{font-size:13px}.gf-receipt-table th,.gf-receipt-table td{padding:9px 5px}.gf-receipt-toolbar button{padding:10px 12px}}
+@media print{
+  body.receipt-open>*:not(#gfReceiptOverlay){display:none!important}
+  body.receipt-open{background:#fff!important}
+  #gfReceiptOverlay{position:static!important;display:block!important;background:#fff!important;padding:0!important;overflow:visible!important}
+  .gf-receipt-toolbar{display:none!important}
+  .gf-receipt-shell{width:100%!important;margin:0!important}
+  .gf-receipt-paper{max-width:none!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
+}
+</style>
+
+<style>
+\n/* ===== DEVICE & RECEIPT REGISTRY ===== */\nasync function loadRegistry(){\n  const q=await db.from('product_private').select('*').order('updated_at',{ascending:false});\n  if(q.error){console.error('Registry:',q.error);return;}\n  D=q.data||[]; updateRegistryStats(); renderRegistry();\n}\nfunction registryIdentifiers(p){\n  const ids=(p.items||[]).map(x=>x.id).filter(Boolean);\n  const m=new Map(D.map(x=>[x.product_id,x]));\n  return (p.items||[]).map(x=>{const v=m.get(x.id);return v&&v.identifier_type!=='none'&&v.identifier?{name:x.name,type:v.identifier_type,value:v.identifier}:null}).filter(Boolean);\n}\nfunction registryHaystack(p){\n  return [p.id,p.name,p.email,p.phone,p.payment_reference,p.status,p.payment_status,...(p.items||[]).map(x=>x.name),...registryIdentifiers(p).map(x=>x.value)].join(' ').toLowerCase();\n}\nfunction updateRegistryStats(){\n  const all=$('regAll'),paid=$('regPaid'),devices=$('regDevices');if(all)all.textContent=B.length;if(paid)paid.textContent=B.filter(x=>x.payment_status==='paid').length;if(devices)devices.textContent=D.filter(x=>x.identifier_type!=='none'&&x.identifier).length;\n}\nfunction renderRegistry(){\n  const box=$('registryResults');if(!box)return;\n  const q=($('registryQ')?.value||'').trim().toLowerCase();\n  const rows=q?B.filter(p=>registryHaystack(p).includes(q)):[];\n  const matches=$('regMatches');if(matches)matches.textContent=rows.length;\n  if(!q){box.innerHTML='<div class="muted" style="padding:24px;text-align:center">Registry records are hidden. Use <b>Search Registry</b> to find a customer or device.</div>';return;}\n  if(!rows.length){box.innerHTML='<div class="muted" style="padding:24px;text-align:center">No matching customer or device record found.</div>';return;}\n  let html='<div class="registry-table"><table><thead><tr><th>Customer</th><th>Device / Identifier</th><th>Reference</th><th>Payment</th><th>Actions</th></tr></thead><tbody>';\n  rows.forEach(p=>{const ids=registryIdentifiers(p);const devices=ids.length?ids.map(v=>`<div><b>${E(v.name)}</b><br><span class="registry-chip">${E(v.type.toUpperCase())}: ${E(v.value)}</span></div>`).join(''):(p.items||[]).map(v=>`<div><b>${E(v.name)}</b></div>`).join('');html+=`<tr><td><b>${E(p.name)}</b><br>${E(p.phone||'')}<br><small>${E(p.email||'')}</small></td><td>${devices||'—'}</td><td><small>Order: ${E(p.id)}</small><br><small>Payment: ${E(p.payment_reference||'—')}</small></td><td>${pay(p.payment_status)}<br>${E(p.status||'')}</td><td><button class="btn" ${p.payment_status==='paid'?'':'disabled'} onclick="receipt('${p.id}')">View Receipt</button> <button class="btn" onclick="showRegistryHistory('${p.id}')">History</button></td></tr>`});\n  html+='</tbody></table></div>';box.innerHTML=html;\n}\nfunction clearRegistrySearch(){if($('registryQ'))$('registryQ').value='';renderRegistry()}\nfunction showRegistryHistory(id){\n  const p=B.find(x=>x.id===id);if(!p)return;const matches=B.filter(x=>(p.email&&x.email===p.email)||(p.phone&&x.phone===p.phone)||(!p.email&&!p.phone&&x.name===p.name));\n  const overlay=document.createElement('div');overlay.className='registry-overlay open';overlay.innerHTML=`<div class="registry-modal"><div class="registry-modal-head"><h2>Customer History</h2><button class="registry-close" onclick="this.closest('.registry-overlay').remove()">×</button></div><p>${E(p.name||'Customer')} — ${matches.length} purchase record${matches.length===1?'':'s'} found.</p><div class="registry-table"><table><thead><tr><th>Date</th><th>Items</th><th>Total</th><th>Payment</th><th>Receipt</th></tr></thead><tbody>${matches.map(x=>`<tr><td>${E(x.created_at?new Date(x.created_at).toLocaleDateString('en-NG'):'—')}</td><td>${(x.items||[]).map(i=>E(i.name)).join(', ')}</td><td>${N(x.total)}</td><td>${pay(x.payment_status)}</td><td><button class="btn" ${x.payment_status==='paid'?'':'disabled'} onclick="receipt('${x.id}')">View</button></td></tr>`).join('')}</tbody></table></div></div>`;document.body.appendChild(overlay);\n}\nfunction openRegistryPopup(){\n  const o=$('registrySearchOverlay');if(!o)return;o.classList.add('open');o.setAttribute('aria-hidden','false');$('registryPopupInput').value=$('registryQ')?.value||'';setTimeout(()=>$('registryPopupInput').focus(),50);\n}\nfunction closeRegistryPopup(){const o=$('registrySearchOverlay');if(o){o.classList.remove('open');o.setAttribute('aria-hidden','true')}}\nfunction runRegistryPopupSearch(){const q=$('registryPopupInput').value.trim();if($('registryQ'))$('registryQ').value=q;closeRegistryPopup();showRegistryTab();renderRegistry();if(q)setTimeout(()=>$('registryResults')?.scrollIntoView({behavior:'smooth',block:'start'}),80)}\nfunction showRegistryTab(){const b=[...document.querySelectorAll('.nav')].find(x=>x.getAttribute('onclick')?.includes("tab('registry'"));if(b)tab('registry',b);}\n
+/* ===== HERO SHOWCASE ADMIN ===== */
+.hero-admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.hero-admin-preview{border:1px solid var(--l);border-radius:12px;background:#080a0d;padding:12px;margin-top:12px}
+.hero-admin-preview img,.hero-admin-preview video{width:100%;max-height:260px;object-fit:contain;border-radius:9px;background:#050607}
+.hero-media-list{display:grid;gap:10px;margin-top:14px}
+.hero-media-item{display:grid;grid-template-columns:90px 1fr auto;gap:12px;align-items:center;border:1px solid #252b32;background:#0a0d10;border-radius:10px;padding:10px}
+.hero-media-item img,.hero-media-item video{width:90px;height:70px;object-fit:cover;border-radius:7px;background:#050607}
+.hero-media-meta b{display:block;margin-bottom:5px}.hero-media-meta small{color:#858b93}
+.hero-media-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:850px){.hero-admin-grid{grid-template-columns:1fr}.hero-media-item{grid-template-columns:70px 1fr}.hero-media-item img,.hero-media-item video{width:70px;height:58px}.hero-media-actions{grid-column:1/-1;justify-content:flex-start}}
+</style>
+</head><body>
+<div id="login" style="min-height:100vh;display:grid;place-items:center;padding:20px"><div class="card" style="width:min(420px,100%)"><div class="logo">GADGETS<span>FRIENDLY</span></div><h1>Admin Portal</h1><p class="muted">Supabase Auth</p><div class="field"><label>Email</label><input id="email" type="email"></div><div class="field" style="margin-top:10px"><label>Password</label><input id="password" type="password"></div><button class="btn primary" style="width:100%;margin-top:14px" onclick="login()">Sign in</button></div></div>
+<div id="app" class="hidden"><header class="top"><div class="logo">GADGETS<span>FRIENDLY</span></div><div><a class="btn" href="index.html">Main Website</a> <button class="btn" onclick="logout()">Logout</button></div></header>
+<div class="layout"><aside class="side"><button class="nav active" onclick="tab('dash',this)">Dashboard</button><button class="nav" onclick="tab('prod',this)">Products</button><button class="nav" onclick="tab('hero',this)">Hero Showcase</button><button class="nav" onclick="tab('rep',this)">Repairs</button><button class="nav" onclick="tab('buy',this)">Purchases</button><button class="nav registry-launch" type="button" onclick="openRegistryPopup()">Device &amp; Receipt Registry</button></aside>
+<main class="main">
+<section id="dash"><h1>Operations Dashboard</h1><div class="grid4"><div class="stat">Products<div class="num" id="nprod">0</div></div><div class="stat">New Arrivals<div class="num" id="nnew">0</div></div><div class="stat">Open Repairs<div class="num" id="nrep">0</div></div><div class="stat">Unfinished Orders<div class="num" id="nbuy">0</div></div></div><div class="card"><h2>Recent Orders</h2><div id="recent"></div></div></section>
+<section id="prod" class="hidden"><h1>Products</h1><div class="card"><h2 id="ptitle">Add Product</h2><div class="form"><div class="field"><label>Name</label><input id="pn"></div><div class="field"><label>Category</label><select id="pc"><option value="mac">Mac / MacBook / Laptops</option><option value="apple">iPhone / iPad / Apple Watch / AirPods</option><option value="accessories">Accessories</option></select></div><div class="field"><label>Price ₦</label><input id="pp" type="number" min="0"></div><div class="field"><label>Image</label><input id="pi" type="file" accept="image/*"></div><div class="field"><label>Identifier type</label><select id="pit"><option value="none">None</option><option value="serial">Serial</option><option value="imei">IMEI</option></select></div><div class="field"><label>Private Serial / IMEI</label><input id="piv"></div><div class="field full"><label>Description</label><textarea id="pd"></textarea></div><label><input id="pnw" type="checkbox"> New Arrival</label></div><div class="actions"><button class="btn primary" onclick="saveProduct()">Save Product</button><button class="btn" onclick="clearProduct()">Clear</button></div></div><div class="card"><h2>Inventory</h2><div id="plist"></div></div></section>
+<section id="hero" class="hidden"><div style="display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap"><div><h1>Hero Showcase</h1><p class="muted">Control the rotating product images on the left and the featured video on the right of the homepage.</p></div><a class="btn" href="index.html" target="_blank">Preview Homepage</a></div>
+<div class="hero-admin-grid">
+<div class="card"><h2>Rotating Hero Images</h2><p class="muted">Upload MacBooks, HP, Dell, iPhones, Apple Watch, AirPods and other showcase images. Active images rotate automatically on the homepage.</p><div class="form"><div class="field"><label>Image title</label><input id="heroImageTitle" placeholder="e.g. MacBook Pro"></div><div class="field"><label>Display order</label><input id="heroImageOrder" type="number" min="0" value="0"></div><div class="field full"><label>Image</label><input id="heroImageFile" type="file" accept="image/*"></div></div><label style="display:block;margin-top:12px"><input id="heroImageActive" type="checkbox" checked> Active on homepage</label><div class="actions"><button class="btn primary" type="button" onclick="saveHeroImage()">Upload Hero Image</button></div><div id="heroImageList" class="hero-media-list"></div></div>
+<div class="card"><h2>Featured Video</h2><p class="muted">Upload one featured video for the right side of the homepage. Saving a new featured video automatically makes it the current featured video.</p><div class="form"><div class="field full"><label>Video title</label><input id="heroVideoTitleAdmin" placeholder="e.g. iPhone 18 Pro Max Unboxing"></div><div class="field full"><label>Description</label><textarea id="heroVideoDescriptionAdmin" placeholder="Short description shown on the homepage."></textarea></div><div class="field"><label>Video file</label><input id="heroVideoFile" type="file" accept="video/*"></div><div class="field"><label>Poster image (optional)</label><input id="heroVideoPosterFile" type="file" accept="image/*"></div></div><label style="display:block;margin-top:12px"><input id="heroVideoActive" type="checkbox" checked> Make this the featured video</label><div class="actions"><button class="btn primary" type="button" onclick="saveHeroVideo()">Upload Featured Video</button></div><div id="heroVideoList" class="hero-media-list"></div></div>
+</div></section>
+<section id="rep" class="hidden"><h1>Repair Requests</h1><div class="actions"><button class="btn danger" onclick="clearRepairs()">Clear Completed Jobs</button></div><div class="card"><div id="rlist"></div></div></section>
+<section id="buy" class="hidden"><h1>Purchases</h1><div class="actions"><button class="btn danger" onclick="clearPurchases()">Clear Completed Purchases</button></div><div class="card"><div id="blist"></div></div></section>
+<section id="registry" class="hidden registry-section">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap"><div><h1>Device &amp; Receipt Registry</h1><p class="muted">Search customer and device records without displaying the registry publicly.</p></div><button class="btn" onclick="openRegistryPopup()">Search Registry</button></div>
+  <div class="registry-stats"><div class="stat">Purchases<div class="num" id="regAll">0</div></div><div class="stat">Paid Orders<div class="num" id="regPaid">0</div></div><div class="stat">Registered Devices<div class="num" id="regDevices">0</div></div><div class="stat">Matching Records<div class="num" id="regMatches">0</div></div></div>
+  <div class="card"><div class="registry-search"><input id="registryQ" placeholder="Search by full name, phone, email, IMEI, serial or reference…" oninput="renderRegistry()"><button class="btn primary" onclick="renderRegistry()">Search</button><button class="btn" onclick="clearRegistrySearch()">Clear</button></div><div id="registryResults" style="margin-top:14px"></div></div>
+</section>
+
+</main></div></div>
+<div id="registrySearchOverlay" class="registry-overlay" aria-hidden="true"><div class="registry-modal" role="dialog" aria-modal="true" aria-labelledby="registrySearchTitle"><div class="registry-modal-head"><h2 id="registrySearchTitle">Search Device &amp; Receipt Registry</h2><button type="button" class="registry-close" onclick="closeRegistryPopup()">×</button></div><p>Search by the customer's <b>full name, phone number, email, IMEI, serial number, order reference or payment reference</b>. The registry stays hidden until you search.</p><input id="registryPopupInput" type="search" autocomplete="off" placeholder="Name, phone, IMEI, serial, reference…"><div class="registry-actions"><button type="button" class="btn primary" onclick="runRegistryPopupSearch()">Search Registry</button><button type="button" class="btn" onclick="$('registryPopupInput').value='';$('registryQ').value='';closeRegistryPopup();renderRegistry()">Clear &amp; Close</button></div></div></div>
+<div id="toast" class="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const U='https://qgnibojnkzgakzruntza.supabase.co',K='sb_publishable_M6f8PKxb4tAp7BZmV8zdKw_EgLl_7Yk',WA='2349071073992';const db=supabase.createClient(U,K,{auth:{persistSession:true,autoRefreshToken:true}});let P=[],R=[],B=[],D=[],edit=null;
+const $=x=>document.getElementById(x),E=x=>String(x??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])),N=x=>'₦'+Number(x||0).toLocaleString('en-NG'),T=x=>{let e=$('toast');e.textContent=x;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500)};
+async function login(){try{let{data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;if(data.user?.app_metadata?.role!=='admin'){await db.auth.signOut();throw Error('This account is not an admin.')}$('login').classList.add('hidden');$('app').classList.remove('hidden');load()}catch(e){T(e.message)}}
+async function logout(){await db.auth.signOut();location.reload()}
+function tab(id,b){['dash','prod','hero','rep','buy','registry'].forEach(x=>$(x).classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+async function load(){let[a,b,c]=await Promise.all([db.from('products').select('*').order('created_at',{ascending:false}),db.from('repairs').select('*').order('created_at',{ascending:false}),db.from('purchases').select('*').order('created_at',{ascending:false})]);if(a.error||b.error||c.error)return T((a.error||b.error||c.error).message);P=a.data||[];R=b.data||[];B=c.data||[];render();await loadHeroAdmin();await loadRegistry()}
+
+/* ===== HERO SHOWCASE ADMIN ===== */
+function heroUrl(path){return path?db.storage.from('hero-media').getPublicUrl(path).data.publicUrl:''}
+async function loadHeroAdmin(){
+  const [a,b]=await Promise.all([
+    db.from('hero_slides').select('*').order('sort_order',{ascending:true}).order('created_at',{ascending:false}),
+    db.from('hero_videos').select('*').order('created_at',{ascending:false})
+  ]);
+  if(a.error||b.error){T((a.error||b.error).message);return}
+  const slides=a.data||[],videos=b.data||[];
+  $('heroImageList').innerHTML=slides.length?slides.map(x=>`<div class="hero-media-item"><img src="${E(heroUrl(x.image_path))}" alt=""><div class="hero-media-meta"><b>${E(x.title||'Untitled')}</b><small>Order: ${E(x.sort_order)} · ${x.is_active?'Active':'Hidden'}</small></div><div class="hero-media-actions"><button class="btn" onclick="toggleHeroImage('${x.id}',${!x.is_active})">${x.is_active?'Hide':'Show'}</button><button class="btn danger" onclick="deleteHeroImage('${x.id}','${E(x.image_path)}')">Delete</button></div></div>`).join(''):'<p class="muted">No hero images yet.</p>';
+  $('heroVideoList').innerHTML=videos.length?videos.map(x=>`<div class="hero-media-item"><video src="${E(heroUrl(x.video_path))}" muted preload="metadata"></video><div class="hero-media-meta"><b>${E(x.title||'Untitled')}</b><small>${x.is_active?'Featured':'Not featured'} · ${E(x.description||'')}</small></div><div class="hero-media-actions"><button class="btn" onclick="setFeaturedVideo('${x.id}')">${x.is_active?'Featured':'Make Featured'}</button><button class="btn danger" onclick="deleteHeroVideo('${x.id}','${E(x.video_path)}','${E(x.poster_path||'')}')">Delete</button></div></div>`).join(''):'<p class="muted">No featured videos yet.</p>';
+}
+async function saveHeroImage(){
+  try{const f=$('heroImageFile').files[0],title=$('heroImageTitle').value.trim()||'GadgetsFriendly Showcase',order=Number($('heroImageOrder').value||0),active=$('heroImageActive').checked;if(!f)return T('Choose a hero image first.');const id=crypto.randomUUID(),ext=(f.name.split('.').pop()||'jpg').toLowerCase(),path=`slides/${id}.${ext}`;let q=await db.storage.from('hero-media').upload(path,f,{contentType:f.type,upsert:false});if(q.error)throw q.error;q=await db.from('hero_slides').insert({id,title,image_path:path,sort_order:Number.isFinite(order)?order:0,is_active:active});if(q.error)throw q.error;$('heroImageFile').value='';$('heroImageTitle').value='';$('heroImageOrder').value='0';await loadHeroAdmin();T('Hero image uploaded.') }catch(e){T(e.message||'Could not upload hero image.')}
+}
+async function toggleHeroImage(id,active){let q=await db.from('hero_slides').update({is_active:active,updated_at:new Date().toISOString()}).eq('id',id);if(q.error)return T(q.error.message);loadHeroAdmin()}
+async function deleteHeroImage(id,path){if(!confirm('Delete this hero image?'))return;let q=await db.from('hero_slides').delete().eq('id',id);if(q.error)return T(q.error.message);if(path)await db.storage.from('hero-media').remove([path]);loadHeroAdmin();T('Hero image deleted.')}
+async function saveHeroVideo(){
+  try{const f=$('heroVideoFile').files[0],poster=$('heroVideoPosterFile').files[0],title=$('heroVideoTitleAdmin').value.trim()||'GadgetsFriendly Featured Video',description=$('heroVideoDescriptionAdmin').value.trim(),active=$('heroVideoActive').checked;if(!f)return T('Choose a video first.');const id=crypto.randomUUID(),vext=(f.name.split('.').pop()||'mp4').toLowerCase(),vpath=`videos/${id}.${vext}`;let q=await db.storage.from('hero-media').upload(vpath,f,{contentType:f.type,upsert:false});if(q.error)throw q.error;let ppath=null;if(poster){const pext=(poster.name.split('.').pop()||'jpg').toLowerCase();ppath=`posters/${id}.${pext}`;q=await db.storage.from('hero-media').upload(ppath,poster,{contentType:poster.type,upsert:false});if(q.error)throw q.error}if(active){q=await db.from('hero_videos').update({is_active:false,updated_at:new Date().toISOString()}).eq('is_active',true);if(q.error)throw q.error}q=await db.from('hero_videos').insert({id,title,description,video_path:vpath,poster_path:ppath,is_active:active});if(q.error)throw q.error;$('heroVideoFile').value='';$('heroVideoPosterFile').value='';$('heroVideoTitleAdmin').value='';$('heroVideoDescriptionAdmin').value='';await loadHeroAdmin();T('Featured video uploaded.') }catch(e){T(e.message||'Could not upload video.')}
+}
+async function setFeaturedVideo(id){let q=await db.from('hero_videos').update({is_active:false,updated_at:new Date().toISOString()}).eq('is_active',true);if(q.error)return T(q.error.message);q=await db.from('hero_videos').update({is_active:true,updated_at:new Date().toISOString()}).eq('id',id);if(q.error)return T(q.error.message);loadHeroAdmin();T('Featured video updated.')}
+async function deleteHeroVideo(id,vpath,ppath){if(!confirm('Delete this video?'))return;let q=await db.from('hero_videos').delete().eq('id',id);if(q.error)return T(q.error.message);const paths=[vpath,ppath].filter(Boolean);if(paths.length)await db.storage.from('hero-media').remove(paths);loadHeroAdmin();T('Featured video deleted.')}
+
+function render(){let pending=B.filter(x=>x.status!=='completed');$('nprod').textContent=P.length;$('nnew').textContent=P.filter(x=>x.is_new).length;$('nrep').textContent=R.filter(x=>x.status!=='completed').length;$('nbuy').textContent=pending.length;$('recent').innerHTML=table(pending.slice(0,5),['Customer','Total','Payment','Status'],x=>`<tr><td>${E(x.name)}</td><td>${N(x.total)}</td><td>${pay(x.payment_status)}</td><td>${badge(x.status)}</td></tr>`);renderProducts();renderRepairs();renderPurchases()}
+function table(a,h,row){if(!a.length)return'<p class="muted">None.</p>';return'<div class="tablewrap"><table class="table"><thead><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+a.map(row).join('')+'</tbody></table></div>'}
+function badge(s){return'<span class="badge '+(s==='completed'?'paid':'new')+'">'+E(s||'new')+'</span>'}function pay(s){return'<span class="badge '+(s==='paid'?'paid':'')+'">'+E(s||'unpaid')+'</span>'}
+async function imgBlob(f){if(!f)return null;return f}
+async function saveProduct(){try{let name=$('pn').value.trim(),cat=$('pc').value,price=Number($('pp').value),desc=$('pd').value.trim(),typ=$('pit').value,ident=$('piv').value.trim(),nw=$('pnw').checked;if(!name||!Number.isFinite(price)||price<0)return T('Enter product name and valid price.');if(typ!=='none'&&!ident)return T('Enter serial/IMEI or choose None.');let id=edit;if(id){let q=await db.from('products').update({name,category:cat,price,description:desc,is_new:nw,updated_at:new Date().toISOString()}).eq('id',id);if(q.error)throw q.error}else{let q=await db.from('products').insert({name,category:cat,price,description:desc,is_new:nw}).select('id').single();if(q.error)throw q.error;id=q.data.id}let f=$('pi').files[0];if(f){let ext=f.type.includes('png')?'png':'jpg',path='products/'+id+'-'+Date.now()+'.'+ext,q=await db.storage.from('product-images').upload(path,f,{contentType:f.type});if(q.error)throw q.error;q=await db.from('products').update({image_path:path}).eq('id',id);if(q.error)throw q.error}let q=await db.from('product_private').upsert({product_id:id,identifier_type:typ,identifier:typ==='none'?null:ident,updated_at:new Date().toISOString()},{onConflict:'product_id'});if(q.error)throw q.error;clearProduct();await load();T('Product saved.')}catch(e){T(e.message)}}
+async function editProduct(id){let p=P.find(x=>x.id===id);if(!p)return;edit=id;$('pn').value=p.name||'';$('pc').value=p.category;$('pp').value=p.price;$('pd').value=p.description||'';$('pnw').checked=!!p.is_new;let q=await db.from('product_private').select('*').eq('product_id',id).maybeSingle();$('pit').value=q.data?.identifier_type||'none';$('piv').value=q.data?.identifier||'';$('ptitle').textContent='Edit Product';tab('prod',document.querySelectorAll('.nav')[1])}
+async function delProduct(id){if(!confirm('Delete this product?'))return;let q=await db.from('products').delete().eq('id',id);if(q.error)return T(q.error.message);await load();T('Product deleted.')}
+function clearProduct(){edit=null;['pn','pp','pd','piv'].forEach(x=>$(x).value='');$('pc').value='mac';$('pit').value='none';$('pnw').checked=false;$('pi').value='';$('ptitle').textContent='Add Product'}
+function renderProducts(){let rows=P.map(p=>`<tr><td>${p.image_path?`<img class=thumb src="${E(db.storage.from('product-images').getPublicUrl(p.image_path).data.publicUrl)}">`:'—'}</td><td>${E(p.name)}<br><small>${E(p.description||'')}</small></td><td>${E(p.category)}</td><td>${N(p.price)}</td><td>${p.is_new?'YES':'NO'}</td><td><button class="btn" onclick="editProduct('${p.id}')">Edit</button> <button class="btn danger" onclick="delProduct('${p.id}')">Delete</button></td></tr>`);$('plist').innerHTML=table(P,['Image','Product','Category','Price','New','Actions'],(_,i)=>rows[i])}
+async function setStatus(t,id,s){let q=await db.from(t).update({status:s,updated_at:new Date().toISOString()}).eq('id',id);if(q.error)T(q.error.message);else load()}
+async function del(t,id){if(!confirm('Delete this record?'))return;let q=await db.from(t).delete().eq('id',id);if(q.error)T(q.error.message);else load()}
+async function clearRepairs(){if(!confirm('Clear completed jobs?'))return;let q=await db.from('repairs').delete().eq('status','completed');if(q.error)T(q.error.message);else load()}
+async function clearPurchases(){if(!confirm('Clear completed purchases?'))return;let q=await db.from('purchases').delete().eq('status','completed');if(q.error)T(q.error.message);else load()}
+function renderRepairs(){$('rlist').innerHTML=table(R,['Customer','Device','Status','Actions'],x=>`<tr><td>${E(x.name)}<br>${E(x.phone)}</td><td>${E(x.device)} — ${E(x.model)}<br>${E(x.problem)}</td><td><select onchange="setStatus('repairs','${x.id}',this.value)"><option ${x.status==='new'?'selected':''}>new</option><option ${x.status==='in-progress'?'selected':''}>in-progress</option><option ${x.status==='completed'?'selected':''}>completed</option></select></td><td><button class="btn" onclick="window.open('https://wa.me/${WA}?text='+encodeURIComponent('GadgetsFriendly Repair\\nName: ${E(x.name)}\\nPhone: ${E(x.phone)}\\nDevice: ${E(x.device)}\\nProblem: ${E(x.problem)}'))">WhatsApp Store</button> <button class="btn danger" onclick="del('repairs','${x.id}')">Delete</button></td></tr>`)}
+function renderPurchases(){$('blist').innerHTML=table(B,['Customer','Items','Total','Payment','Status','Receipt','Delete'],x=>`<tr><td>${E(x.name)}<br>${E(x.phone)}<br>${E(x.email||'')}</td><td>${(x.items||[]).map(i=>E(i.name)).join(', ')}</td><td>${N(x.total)}</td><td>${pay(x.payment_status)}<br><small>${E(x.payment_reference||'')}</small></td><td><select onchange="setStatus('purchases','${x.id}',this.value)"><option ${x.status==='new'?'selected':''}>new</option><option ${x.status==='in-progress'?'selected':''}>in-progress</option><option ${x.status==='completed'?'selected':''}>completed</option></select></td><td><button class="btn" ${x.payment_status==='paid'?'':'disabled'} onclick="receipt('${x.id}')">Receipt</button></td><td><button class="btn danger" onclick="del('purchases','${x.id}')">Delete</button></td></tr>`)}
+function closeReceipt(){
+  const el=document.getElementById('gfReceiptOverlay');
+  if(el)el.remove();
+  document.body.classList.remove('receipt-open');
+}
+
+function printReceipt(){
+  window.print();
+}
+
+async function receipt(id){
+  const p=B.find(x=>x.id===id);
+  if(!p||p.payment_status!=='paid'){T('Receipt is available after payment is verified.');return;}
+
+  // iPhone/Safari-safe: do NOT open a popup or a new tab.
+  // Render the receipt inside the Admin page so it cannot flash and disappear.
+  closeReceipt();
+  const overlay=document.createElement('div');
+  overlay.id='gfReceiptOverlay';
+  overlay.className='gf-receipt-overlay';
+  overlay.innerHTML='<div class="gf-receipt-shell"><div class="gf-receipt-loading"><h2>Loading receipt...</h2></div></div>';
+  document.body.appendChild(overlay);
+  document.body.classList.add('receipt-open');
+
+  try{
+    const ids=(p.items||[]).map(x=>x.id).filter(Boolean);
+    const q=ids.length?await db.from('product_private').select('*').in('product_id',ids):{data:[]};
+    if(q.error)throw q.error;
+
+    const m=new Map((q.data||[]).map(x=>[x.product_id,x]));
+    const rows=(p.items||[]).map(x=>{
+      const v=m.get(x.id);
+      const identifier=v&&v.identifier_type!=='none'?(v.identifier||'—'):'—';
+      return `<tr><td>${E(x.name)}</td><td>${N(x.price)}</td><td>${E(identifier)}</td></tr>`;
+    }).join('');
+
+    const date=p.created_at?new Date(p.created_at).toLocaleString('en-NG'):new Date().toLocaleString('en-NG');
+    const shell=document.querySelector('#gfReceiptOverlay .gf-receipt-shell');
+    if(!shell)throw new Error('Receipt window was closed.');
+
+    shell.innerHTML=`
+      <div class="gf-receipt-toolbar">
+        <button type="button" class="gf-receipt-close" onclick="closeReceipt()">× Close</button>
+        <button type="button" class="gf-receipt-print" onclick="printReceipt()">Print / Save as PDF</button>
+      </div>
+      <article class="gf-receipt-paper">
+        <h1>GADGETS<span>FRIENDLY</span></h1>
+        <p class="gf-receipt-sub">Technology. Carefully Chosen.</p>
+        <div class="gf-receipt-store"><b>122 Aba Road, Port Harcourt</b><br>07038798582</div>
+        <hr>
+        <div class="gf-receipt-meta">
+          <b>Receipt / Order:</b> ${E(p.id)}<br>
+          <b>Date:</b> ${E(date)}<br>
+          <b>Customer:</b> ${E(p.name)}<br>
+          <b>Phone:</b> ${E(p.phone)}<br>
+          <b>Email:</b> ${E(p.email||'—')}<br>
+          <b>Payment:</b> <span class="gf-paid">PAID</span><br>
+          <b>Paystack Reference:</b> ${E(p.payment_reference||'—')}
+        </div>
+        <hr>
+        <table class="gf-receipt-table">
+          <thead><tr><th>Product</th><th>Price</th><th>Serial / IMEI</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="gf-receipt-total">Total: ${N(p.total)}</div>
+        ${p.note?`<p><b>Order note:</b> ${E(p.note)}</p>`:''}
+        <p class="gf-receipt-thanks">Thank you for choosing GadgetsFriendly.</p>
+      </article>`;
+  }catch(err){
+    console.error('Receipt error:',err);
+    const shell=document.querySelector('#gfReceiptOverlay .gf-receipt-shell');
+    if(shell)shell.innerHTML=`<div class="gf-receipt-error"><h2>Receipt could not be loaded</h2><p>${E(err.message||'Please try again.')}</p><button type="button" onclick="closeReceipt()">Return to Admin</button></div>`;
+    T('Could not load the receipt: '+(err.message||'Please try again.'));
+  }
+}
+
+(async()=>{let{data}=await db.auth.getSession();if(data.session?.user?.app_metadata?.role==='admin'){$('login').classList.add('hidden');$('app').classList.remove('hidden');load()}})();
+
+if(document.getElementById('registrySearchOverlay'))document.getElementById('registrySearchOverlay').addEventListener('click',e=>{if(e.target.id==='registrySearchOverlay')closeRegistryPopup()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRegistryPopup();if(e.key==='Enter'&&document.activeElement?.id==='registryPopupInput')runRegistryPopupSearch()});
+</script></body></html>
