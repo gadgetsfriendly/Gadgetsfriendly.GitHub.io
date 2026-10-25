@@ -1,0 +1,49 @@
+GADGETSFRIENDLY — LAUNCH PACKAGE (25 OCTOBER 2026)
+Production domain: https://gadgetsfriendly.com.ng
+
+FILES TO UPLOAD TO TRUEHOST WEBSITE ROOT (public_html):
+1. index.html — complete existing homepage with added search/social metadata and business structured data.
+2. admin.html — complete existing admin page, with a noindex directive added. THIS IS NOT AN ACCESS CONTROL; Supabase admin roles and row-level security must still protect data.
+3. robots.txt — crawler guidance, including sitemap URL.
+4. sitemap.xml — homepage and three legal pages (only upload if these pages exist and load correctly).
+5. social-preview.jpg — 1200 x 630 social link preview.
+
+FILES FOR IPHONE COPY/PASTE:
+- index.html.txt — identical to index.html
+- admin.html.txt — identical to admin.html
+Do not upload both .html and .html.txt versions as separate webpages. Use the .html files for hosting.
+
+KEEP YOUR EXISTING OTHER FILES IN PLACE:
+- privacy-policy.html, terms-of-service.html, data-deletion.html
+- favicon.ico, favicon-32x32.png, favicon-192x192.png, apple-touch-icon.png
+- any referenced site image/video files and other assets
+- Supabase Edge Functions remain deployed separately; uploading HTML does NOT deploy functions.
+
+TODAY'S TEST PLAN (before replacing production files):
+[ ] Make a backup of currently working production files.
+[ ] Confirm homepage loads on iPhone and desktop; all 4 layouts and light/dark modes.
+[ ] Check hero media and Repair Lab video play without unexpected sound.
+[ ] Check product photos, prices, flash sale, stock quantities, search and cart animation.
+[ ] Test registration, verification, login, reset and customer history.
+[ ] Test repair submission, admin queue and repair email/WhatsApp notification.
+[ ] Test checkout: cancelled, failed/pending and successful Paystack flows.
+[ ] Confirm automatic post-payment receipt opens immediately; receipt email and admin WhatsApp arrive.
+[ ] Confirm order recorded exactly once, stock decremented exactly once, serial/IMEI private.
+[ ] Confirm admin login and database access controls for non-admin visitors.
+[ ] Verify all legal pages, footer links, HTTPS and production payment return URLs.
+[ ] Confirm site has no console errors on key flows.
+
+AFTER HOSTING:
+[ ] Open https://gadgetsfriendly.com.ng/robots.txt and /sitemap.xml and /social-preview.jpg.
+[ ] Verify domain ownership at https://search.google.com/search-console/ and submit sitemap.xml.
+[ ] Create/claim Google Business Profile; confirm address and opening hours.
+[ ] Test social link preview by sharing homepage URL on WhatsApp/Facebook.
+[ ] Set up Google Analytics 4 only after obtaining a real Measurement ID and reviewing consent/privacy needs.
+[ ] Test one controlled live purchase AFTER deployment; do not assume a previous staging test guarantees production.
+
+IMPORTANT LIMITATIONS:
+- This package does not include a live browser/end-to-end payment test; those need a real hosted environment and account access.
+- The sitemap only lists verified-looking file paths from existing HTML; confirm legal files actually exist before submission.
+- Individual products are currently loaded dynamically in the homepage, so Google may not index each product as a separate search result. Product-specific crawlable pages are a later enhancement.
+- Search Console, Google Business Profile, analytics and ads require account setup/verification; metadata alone cannot guarantee Google rankings or virality.
+- Do not expose Paystack secret keys, Supabase service-role keys or WhatsApp tokens in HTML.
