@@ -1911,7 +1911,17 @@ function toggleMobileMenu(e){e?.stopPropagation();document.getElementById('mobil
 function closeMobileMenu(){document.getElementById('mobileNav')?.classList.remove('open')}
 function goToRepair(e){e?.preventDefault();closeMobileMenu();document.getElementById('repair')?.scrollIntoView({behavior:'smooth'})}
 function openDrawer(content){const d=document.getElementById('drawer'),p=document.getElementById('panel');if(!d||!p)return;p.innerHTML=content;d.classList.add('open');d.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
-function closeDrawer(){const d=document.getElementById('drawer');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}document.body.style.overflow=''}
+function closeDrawer(){
+ const d=document.getElementById('drawer');
+ if(d){
+  const heading=d.querySelector('#panel h2')?.textContent||'';
+  if(/Payment confirmation pending|Checking payment/i.test(heading)){
+   gfDismissPendingPayment();
+  }
+  d.classList.remove('open');d.setAttribute('aria-hidden','true');
+ }
+ document.body.style.overflow='';
+}
 
 /* Reliable About close button: delegated handler for dynamically rendered content. */
 document.addEventListener('click',function(e){
@@ -2618,18 +2628,34 @@ function gfShowSupportReview(reference){
 let gfRecoveryBusy=false;
 let gfRecoveryTimer=null;
 let gfRecoveryCount=0;
+// UI dismissal is not payment cancellation: preserve order/reference for later checks.
+const GF_PENDING_DISMISSED_KEY='gf_pending_payment_dismissed_v1';
+function gfPendingDismissed(){
+ try{return sessionStorage.getItem(GF_PENDING_DISMISSED_KEY)==='1'}catch(_){return false}
+}
+function gfDismissPendingPayment(){
+ try{sessionStorage.setItem(GF_PENDING_DISMISSED_KEY,'1')}catch(_){}
+ gfStopRecovery();
+ gfRecoveryCount=12;
+}
+function gfResumePendingPayment(){
+ try{sessionStorage.removeItem(GF_PENDING_DISMISSED_KEY)}catch(_){}
+}
+
 function gfRecoveryReference(p){
  const saved=readPendingReceipt(p.purchaseId,'');
  return saved?.reference||p.reference||('GF-'+String(p.purchaseId).replaceAll('-',''));
 }
 function gfStopRecovery(){if(gfRecoveryTimer){clearTimeout(gfRecoveryTimer);gfRecoveryTimer=null}}
 function gfPendingPaymentScreen(reference,message){
+ if(gfPendingDismissed())return;
  const ref=escapeHtml(reference);
  const msg=escapeHtml(message||'We are securely checking your payment. If you already paid, please do not pay again.');
  const support='https://wa.me/2347038798582?text='+encodeURIComponent('Hello GadgetsFriendly. Please check my payment. Order reference: '+reference);
  openDrawer(`<button class="close" onclick="closeDrawer()">×</button><h2>Payment confirmation pending</h2><p style="color:#bbb;line-height:1.7">${msg}</p><p style="color:#aaa;overflow-wrap:anywhere;font-size:12px">Reference: ${ref}</p><button class="btn primary" style="width:100%;margin-top:12px" onclick="gfCheckCheckoutStatus()">Check payment status</button><a class="btn" style="display:block;text-align:center;margin-top:10px" href="${escapeHtml(support)}" target="_blank" rel="noopener noreferrer">Contact support</a><p style="color:#999;font-size:12px;line-height:1.6">You may return to this page to check again. Do not submit a new payment for this order.</p>`);
 }
 async function gfCheckCheckoutStatus(){
+ gfResumePendingPayment();
  const p=gfReadCheckoutRetry();
  if(!p?.purchaseId){return}
  if(gfRecoveryBusy)return;
@@ -2657,13 +2683,14 @@ async function gfCheckCheckoutStatus(){
   }else{
    gfPendingPaymentScreen(reference,'Your order is recorded. Paystack has not yet confirmed this payment to our verification service. Please do not pay again if you have already transferred the money.');
    // Limited automatic checks while this page remains open; manual checks remain available.
-   if(gfRecoveryCount<12){gfRecoveryCount++;gfStopRecovery();gfRecoveryTimer=setTimeout(()=>{gfRecoveryTimer=null;gfCheckCheckoutStatus()},30000)}
+   if(!gfPendingDismissed() && gfRecoveryCount<12){gfRecoveryCount++;gfStopRecovery();gfRecoveryTimer=setTimeout(()=>{gfRecoveryTimer=null;if(!gfPendingDismissed())gfCheckCheckoutStatus()},30000)}
   }
  }catch(e){
   gfPendingPaymentScreen(reference,'We could not check your payment just now. Your order reference is saved. Please check again shortly or contact support; do not pay twice.');
  }finally{gfRecoveryBusy=false}
 }
 function gfRecoverInterruptedPayment(){
+ if(gfPendingDismissed())return;
  const p=gfReadCheckoutRetry();if(!p?.purchaseId)return;
  // Only restore an order for which a Paystack payment link was actually initialized.
  const saved=readPendingReceipt(p.purchaseId,'');
@@ -2819,6 +2846,7 @@ async function handlePaymentReturn(){
 let gfReturnRecoveryRunning=false;
 let gfLastReturnRecoveryAt=0;
 function gfRecoverOnBrowserReturn(){
+ if(gfPendingDismissed())return;
  if(new URLSearchParams(location.search).get('payment')==='success')return;
  const p=gfReadCheckoutRetry();
  if(!p?.purchaseId)return;
