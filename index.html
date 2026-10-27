@@ -1673,6 +1673,7 @@ document.addEventListener('click',function(e){
 </script>
 <!-- GadgetsFriendly production auth + customer birthday + dual-theme account update -->
 <script>
+
 'use strict';
 const SUPABASE_URL='https://qgnibojnkzgakzruntza.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_M6f8PKxb4tAp7BZmV8zdKw_EgLl_7Yk';
@@ -2697,57 +2698,6 @@ html[data-theme="light"] .products .card .spec{color:#444b55!important;}
   .products .card .add{font-size:11.5px;min-height:42px;}
 }
 </style>
-
-<script id="gf-header-precision-alignment">
-(function(){
-  function alignHeader(){
-    const nav=document.querySelector('header .nav');
-    const bright=nav?.querySelector('.gf-theme-toggle');
-    const search=nav?.querySelector('.gf-search-wide');
-    const repair=nav?.querySelector('.repair-lab-trigger');
-    const about=nav?.querySelector('.about-trigger');
-    if(!nav||!bright||!search||!repair||!about)return;
-    if(!matchMedia('(max-width:700px) and (orientation:portrait)').matches){
-      nav.style.removeProperty('--gf-search-left');nav.style.removeProperty('--gf-search-width');return;
-    }
-    const navBox=nav.getBoundingClientRect();
-    const brightBox=bright.getBoundingClientRect();
-    const repairBox=repair.getBoundingClientRect();
-    const aboutBox=about.getBoundingClientRect();
-    // Match the search's left edge to the brightness circle, while avoiding About overlap.
-    const left=Math.max(brightBox.left-navBox.left,aboutBox.right-navBox.left+7);
-    const width=Math.max(36,repairBox.left-navBox.left-left-7);
-    nav.style.setProperty('--gf-search-left',left+'px');
-    nav.style.setProperty('--gf-search-width',width+'px');
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',alignHeader,{once:true});else alignHeader();
-  addEventListener('resize',alignHeader,{passive:true});
-  addEventListener('orientationchange',alignHeader,{passive:true});
-  if(document.fonts?.ready)document.fonts.ready.then(alignHeader);
-})();
-</script>
-
-<style id="gf-final-header-polish-20261027">
-/* Visual-only polish. All original actions, authentication, checkout and inventory code preserved. */
-:root{--gf-header-stroke:1.5px}
-.navicons>.iconbtn,.navicons>.gf-theme-toggle,.nav>.gf-search-wide,.nav>.repair-lab-trigger{
- border-width:1.5px!important;border-color:#ff2638!important;
-}
-.nav>.repair-lab-trigger{animation:gfRepairGlow 3.8s ease-in-out infinite!important}
-.nav>.repair-lab-trigger{color:#ff2638!important}
-@keyframes gfRepairGlow{
- 0%,100%{color:#ff2638;box-shadow:0 0 0 rgba(255,38,56,0)}
- 50%{color:#ff8993;box-shadow:0 0 11px 2px rgba(255,38,56,.28)}
-}
-@media(prefers-reduced-motion:reduce){.nav>.repair-lab-trigger{animation:none!important}}
-@media(max-width:700px) and (orientation:portrait){
- .nav>.gf-search-wide{left:var(--gf-search-left,48%)!important;width:var(--gf-search-width,65px)!important}
-}
-/* Native taps and immediate feedback without synthetic clicks or duplicate submissions. */
-.nav button,.nav a,.side button,.top button{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,38,56,.12)}
-.nav button:active,.side button:active,.top button:active{filter:brightness(1.12)}
-</style>
-
 </body></html>`;
 }
 function openCustomerReceipt(){
@@ -3144,6 +3094,7 @@ if(new URLSearchParams(location.search).get('payment')!=='success')gfRecoverInte
  }else update(true);
  document.addEventListener('visibilitychange',()=>{const rect=section.getBoundingClientRect();update(rect.top<innerHeight&&rect.bottom>0);});
 })();
+
 </script>
 
 <style>
@@ -3339,5 +3290,34 @@ html[data-theme="light"] header .nav > .gf-search-wide {
   header .nav > .repair-lab-trigger {animation:none!important}
 }
 </style>
+
+<script id="gf-header-precision-alignment">
+(function(){
+  function alignHeader(){
+    const nav=document.querySelector('header .nav');
+    const bright=nav?.querySelector('.gf-theme-toggle');
+    const search=nav?.querySelector('.gf-search-wide');
+    const repair=nav?.querySelector('.repair-lab-trigger');
+    const about=nav?.querySelector('.about-trigger');
+    if(!nav||!bright||!search||!repair||!about)return;
+    if(!matchMedia('(max-width:700px) and (orientation:portrait)').matches){
+      nav.style.removeProperty('--gf-search-left');nav.style.removeProperty('--gf-search-width');return;
+    }
+    const navBox=nav.getBoundingClientRect();
+    const brightBox=bright.getBoundingClientRect();
+    const repairBox=repair.getBoundingClientRect();
+    const aboutBox=about.getBoundingClientRect();
+    // Match the search's left edge to the brightness circle, while avoiding About overlap.
+    const left=Math.max(brightBox.left-navBox.left,aboutBox.right-navBox.left+7);
+    const width=Math.max(36,repairBox.left-navBox.left-left-7);
+    nav.style.setProperty('--gf-search-left',left+'px');
+    nav.style.setProperty('--gf-search-width',width+'px');
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',alignHeader,{once:true});else alignHeader();
+  addEventListener('resize',alignHeader,{passive:true});
+  addEventListener('orientationchange',alignHeader,{passive:true});
+  if(document.fonts?.ready)document.fonts.ready.then(alignHeader);
+})();
+</script>
 </body>
 </html>
