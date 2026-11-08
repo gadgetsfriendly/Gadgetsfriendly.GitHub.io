@@ -2478,6 +2478,30 @@ html[data-theme="light"] body .gf-shop-results .card .gf-card-badge-top{top:-8px
   html[data-theme="light"] body .gf-shop-results .card .gf-card-badge-top{top:-7px!important;left:10px!important;max-width:calc(100% - 20px)!important;}
 }
 </style>
+
+<style id="gf-premium-condition-contrast-final">
+/* Badge contrast only: preserve approved size, spacing and raised position. */
+html[data-theme="light"] body .products .card .gf-card-badge-top .gf-condition-label,
+html[data-theme="light"] body .gf-shop-results .card .gf-card-badge-top .gf-condition-label,
+html[data-theme="light"] body .card .gf-card-badge-top .gf-condition-label {
+  color:#11151b!important; -webkit-text-fill-color:#11151b!important;
+  font-weight:750!important; border-color:#a6b2c2!important;
+  text-shadow:none!important;
+}
+html[data-theme="dark"] body .products .card .gf-card-badge-top .gf-condition-label,
+html[data-theme="dark"] body .gf-shop-results .card .gf-card-badge-top .gf-condition-label,
+html[data-theme="dark"] body .card .gf-card-badge-top .gf-condition-label {
+  color:#ffffff!important; -webkit-text-fill-color:#ffffff!important;
+  font-weight:750!important; border-color:#a0aec0!important;
+}
+html body .products .card .gf-card-badge-top .gf-condition-label::before,
+html body .gf-shop-results .card .gf-card-badge-top .gf-condition-label::before,
+html[data-theme="light"] body .products .card .gf-card-badge-top .gf-condition-label::before,
+html[data-theme="dark"] body .products .card .gf-card-badge-top .gf-condition-label::before {
+  background:#ff1744!important;
+  box-shadow:0 0 0 1px rgba(255,23,68,.18)!important;
+}
+</style>
 </head>
 <body>
 <header><div class="container nav">
