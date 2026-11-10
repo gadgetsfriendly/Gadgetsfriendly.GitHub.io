@@ -3208,6 +3208,95 @@ html[data-theme="light"] header.gf-clean-header .gf-clean-search>.gf-search-wide
 @media(max-width:370px){header.gf-clean-header .gf-clean-top>a.logo{font-size:12px!important}header.gf-clean-header .gf-clean-top>.navicons{gap:2px!important}header.gf-clean-header .navicons>.iconbtn,header.gf-clean-header .navicons>.gf-theme-toggle{width:32px!important;min-width:32px!important;height:32px!important;flex-basis:32px!important}}
 
 </style>
+<style id="gf-sticky-search-precision-glass-20261110">
+/* Scoped header refinement over the supplied current index. All existing markup and JS preserved. */
+header.gf-clean-header{
+  position:sticky!important;top:0!important;z-index:80!important;
+  background:rgba(11,14,20,.80)!important;
+  -webkit-backdrop-filter:saturate(1.55) blur(24px)!important;
+  backdrop-filter:saturate(1.55) blur(24px)!important;
+  border-bottom:1px solid rgba(196,207,224,.27)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.10),inset 0 1px rgba(255,255,255,.10)!important;
+  isolation:isolate;
+}
+header.gf-clean-header::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.10),rgba(255,255,255,.015) 38%,rgba(255,255,255,.065));
+  opacity:.65;
+}
+header.gf-clean-header .gf-clean-nav{position:relative!important;z-index:1!important;gap:9px!important;padding-top:11px!important;padding-bottom:11px!important}
+header.gf-clean-header .gf-clean-top,
+header.gf-clean-header .gf-clean-links,
+header.gf-clean-header .gf-clean-search{position:relative!important;z-index:1!important}
+header.gf-clean-header .navicons>.iconbtn,
+header.gf-clean-header .navicons>.gf-theme-toggle{
+  background:linear-gradient(145deg,rgba(244,249,255,.12),rgba(64,75,92,.09))!important;
+  border:1px solid rgba(196,208,225,.40)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.20),0 3px 12px rgba(0,0,0,.11)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(1.4)!important;
+  backdrop-filter:blur(16px) saturate(1.4)!important;
+}
+header.gf-clean-header .gf-clean-links>.about-trigger{
+  background:linear-gradient(140deg,rgba(220,230,245,.09),rgba(36,43,54,.13))!important;
+  border-color:rgba(190,201,218,.52)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.17)!important;
+}
+header.gf-clean-header .gf-clean-links>.repair-lab-trigger{
+  background:linear-gradient(145deg,rgba(255,55,78,.10),rgba(35,20,30,.20))!important;
+  border-color:#fa3c54!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.10),0 0 10px rgba(255,43,65,.12)!important;
+}
+header.gf-clean-header .gf-clean-search{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  width:100%!important;order:3!important;margin:0!important;
+}
+header.gf-clean-header .gf-clean-search>.gf-search-wide{
+  display:flex!important;width:100%!important;min-height:48px!important;
+  background:linear-gradient(140deg,rgba(159,176,200,.22),rgba(75,87,109,.20))!important;
+  border:1px solid rgba(205,216,233,.57)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.29),inset 0 -1px rgba(0,0,0,.09),0 5px 15px rgba(0,0,0,.09)!important;
+  color:#f1f4fa!important;-webkit-text-fill-color:#f1f4fa!important;
+  -webkit-backdrop-filter:blur(19px) saturate(1.65)!important;
+  backdrop-filter:blur(19px) saturate(1.65)!important;
+}
+header.gf-clean-header .gf-clean-search .gf-search-label{color:inherit!important;-webkit-text-fill-color:inherit!important}
+/* Light mode: pure-white clarity without excessive red. */
+html[data-theme="light"] header.gf-clean-header{
+  background:rgba(255,255,255,.78)!important;
+  border-bottom-color:rgba(139,151,169,.30)!important;
+  box-shadow:0 10px 26px rgba(25,37,55,.07),inset 0 1px rgba(255,255,255,.9)!important;
+}
+html[data-theme="light"] header.gf-clean-header .navicons>.iconbtn,
+html[data-theme="light"] header.gf-clean-header .navicons>.gf-theme-toggle{
+  background:linear-gradient(135deg,rgba(255,255,255,.93),rgba(235,239,247,.72))!important;
+  color:#202735!important;border-color:#b6c0cf!important;
+}
+html[data-theme="light"] header.gf-clean-header .gf-clean-links>.about-trigger{
+  background:rgba(255,255,255,.68)!important;color:#18212e!important;border-color:#aeb8c7!important;
+}
+html[data-theme="light"] header.gf-clean-header .gf-clean-links>.repair-lab-trigger{
+  background:rgba(255,255,255,.72)!important;color:#222a37!important;
+  border-color:#e27686!important;box-shadow:inset 0 1px #fff!important;
+}
+html[data-theme="light"] header.gf-clean-header .gf-clean-search>.gf-search-wide{
+  background:linear-gradient(140deg,rgba(255,255,255,.92),rgba(235,241,250,.83))!important;
+  border-color:#adb9c9!important;color:#303b4c!important;-webkit-text-fill-color:#303b4c!important;
+  box-shadow:inset 0 1px #fff,0 5px 14px rgba(24,34,49,.06)!important;
+}
+/* The previously empty dark band above the hero was excessive. */
+main#home{margin-top:0!important;padding-top:0!important}
+main#home>.hero.dynamic-hero{margin-top:0!important;padding-top:0!important}
+main#home>.hero.dynamic-hero>.dynamic-hero-grid{padding-top:5px!important}
+@media(max-width:700px){
+ header.gf-clean-header .gf-clean-nav{gap:8px!important;padding:10px 0 11px!important}
+ header.gf-clean-header .gf-clean-search>.gf-search-wide{min-height:46px!important;height:46px!important}
+ main#home>.hero.dynamic-hero>.dynamic-hero-grid{padding-top:5px!important}
+}
+@media(prefers-reduced-transparency:reduce){
+ header.gf-clean-header{background:#11151d!important}
+ html[data-theme="light"] header.gf-clean-header{background:#fff!important}
+}
+</style>
 </head>
 <body>
 <header class="gf-clean-header"><div class="container nav gf-clean-nav">
